@@ -1,9 +1,0 @@
-# Désactivation de MultiViews pour éviter les conflits
-Options -MultiViews
-
-# Activation du module de réécriture
-RewriteEngine On
-
-# Si la requête ne correspond pas à un fichier réel, rediriger vers index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [QSA,L]
