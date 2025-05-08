@@ -12,9 +12,9 @@ $router
        ->get('/produit','produit', 'produit')
        ->post('/add_produit', 'add_produit', 'add_produit')
        ->get('/login', 'login', 'login')
-       ->post('/login', 'login', 'login')
+       ->post('/login', 'login', 'login_post')
        ->get('/search', 'search', 'search') 
        ->get('/sing', 'sing', 'sing_in')
        ->get('/profil', 'profil', 'profile') 
        ->get('/logout', 'logout', 'logout') 
-       ->run(); 
+       ->run();
