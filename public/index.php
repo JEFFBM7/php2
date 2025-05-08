@@ -7,15 +7,14 @@ $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 $whoops->register();
 $router
        ->get('/',       'index',   'home')
-       ->get('/produit', 'produit', 'produit')
-       ->get('/add',    'add_produit', 'add_produit')
-       ->get('login', 'login', 'login')
-       ->get('/search', 'search', 'search')
-       ->get('logout', 'logout', 'logout')
-       ->get('/produit/[i:id]', 'produit_detail', 'produit_detail')
-       ->get('singup', 'singup', 'singup')
-       ->get('contact', 'contact', 'contact')
-       ->get('about', 'about', 'about')
-       
-
-       ->run();
+       ->get('/about',  'about',   'about')
+       ->get('/contact','contact', 'contact')
+       ->get('/produit','produit', 'produit')
+       ->post('/add_produit', 'add_produit', 'add_produit')
+       ->get('/login', 'login', 'login')
+       ->post('/login', 'login', 'login')
+       ->get('/search', 'search', 'search') 
+       ->get('/sing', 'sing', 'sing_in')
+       ->get('/profil', 'profil', 'profile') 
+       ->get('/logout', 'logout', 'logout') 
+       ->run(); 
