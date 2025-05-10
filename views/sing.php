@@ -1,7 +1,7 @@
 <?php
 $title = 'Sing In';
 require_once __DIR__ . '/../vendor/autoload.php';
-$pdo = new PDO('mysql:host=localhost;dbname=tp','root','root', [
+$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,13 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':promotion' => $promotion,
         ':telephone' => $telephone,
         ':password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
-        
+
     ]);
     header('Location: /');
     exit;
 }
 ?>
-<section class="bg-gray-50 dark:bg-gray-900">
+<section class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             TrucsPasChers
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Sign up
                     </button>
                     <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                        Already have an account? 
+                        Already have an account?
                         <a href="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
                             Sign in
                         </a>

@@ -3,22 +3,28 @@ CREATE DATABASE IF NOT EXISTS gestion_etudiants;
 USE gestion_etudiants;
 
 -- 2. Table parente : etudiant
+DROP TABLE IF EXISTS etudiant;
 CREATE TABLE IF NOT EXISTS etudiant (
-    id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     nom VARCHAR(100) NOT NULL,
     promotion VARCHAR(50) NOT NULL,
     telephone VARCHAR(20),
+    password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
 
 -- 3. Table enfant : produit
+DROP TABLE IF EXISTS produit;
 CREATE TABLE IF NOT EXISTS produit (
-    id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     etudiant_id INT NOT NULL,
     nom VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(255) DEFAULT NULL,
     prix DECIMAL(10,2) NOT NULL,
+    devis VARCHAR(3) NOT NULL DEFAULT 'USD',
     PRIMARY KEY (id),
     INDEX idx_etudiant (etudiant_id),
     CONSTRAINT fk_etudiant_prod FOREIGN KEY (etudiant_id)
@@ -47,9 +53,11 @@ CREATE TABLE IF NOT EXISTS etudiant_produit (
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
+
 -- 5. Table enfant : note
+DROP TABLE IF EXISTS note;
 CREATE TABLE IF NOT EXISTS note (
-    id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     etudiant_id INT NOT NULL,
     matiere VARCHAR(100) NOT NULL,
     note DECIMAL(5,2) NOT NULL,

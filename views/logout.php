@@ -1,6 +1,8 @@
 <?php
-// Démarre (ou retrouve) la session
-session_start();
+// Démarre (ou retrouve) la session uniquement si ce n'est pas déjà fait
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Vide toutes les variables de session
 $_SESSION = [];
@@ -19,7 +21,6 @@ if (ini_get("session.use_cookies")) {
 
 // Redirige vers la page de login (ou index)
 header('Location: /');
-
 
 exit;
 ?>

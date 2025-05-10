@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Permettre l'accès direct aux répertoires et fichiers existants
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Si le fichier ou le répertoire n'existe pas, rediriger vers index.php
+RewriteRule ^(.*)$ public/index.php/$1 [L,QSA]
