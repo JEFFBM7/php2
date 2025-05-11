@@ -17,6 +17,7 @@ class Produit {
     private $description;
     private $prix;
     private $devis;
+    private $categori; // Ajout de la propriété categori
 
     /**
    
@@ -48,6 +49,9 @@ class Produit {
     }
     public function getDevis() {
         return $this->devis;
+    }
+    public function getCategori() { // Ajout du getter pour categori
+        return $this->categori;
     }
    
      

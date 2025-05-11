@@ -19,6 +19,59 @@ $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 $id = $_SESSION['user_id'];
+
+// Gestion des messages de notification
+$notification = null;
+if (isset($_GET['action'])) {
+    switch ($_GET['action']) {
+        case 'deleted':
+            $notification = ['message' => 'Produit supprimé avec succès.', 'type' => 'success'];
+            break;
+        case 'delete_error':
+            $notification = ['message' => 'Erreur lors de la suppression du produit ou action non autorisée.', 'type' => 'error'];
+            break;
+        case 'product_updated':
+            $notification = ['message' => 'Produit mis à jour avec succès.', 'type' => 'success'];
+            break;
+        case 'profile_updated':
+            $notification = ['message' => 'Votre profil a été mis à jour avec succès.', 'type' => 'success'];
+            break;
+        case 'profile_not_found':
+            $notification = ['message' => 'Profil introuvable.', 'type' => 'error'];
+            break;
+        // Ajoutez d'autres cas pour d'autres actions si nécessaire
+    }
+}
+
+// Traitement de la suppression de produit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_product') {
+    if (isset($_POST['product_id'])) {
+        $product_id_to_delete = $_POST['product_id'];
+        // Vérifier que le produit appartient bien à l'utilisateur connecté avant de supprimer
+        $stmtCheck = $pdo->prepare('SELECT * FROM produit WHERE id = :product_id AND etudiant_id = :etudiant_id');
+        $stmtCheck->execute([':product_id' => $product_id_to_delete, ':etudiant_id' => $id]);
+        if ($stmtCheck->fetch()) {
+            // Supprimer l'image du produit du serveur si elle existe
+            $stmtImage = $pdo->prepare('SELECT image FROM produit WHERE id = :product_id');
+            $stmtImage->execute([':product_id' => $product_id_to_delete]);
+            $image_name = $stmtImage->fetchColumn();
+            if ($image_name && file_exists(__DIR__ . '/../public/images/' . $image_name)) {
+                unlink(__DIR__ . '/../public/images/' . $image_name);
+            }
+
+            $stmtDelete = $pdo->prepare('DELETE FROM produit WHERE id = :product_id');
+            $stmtDelete->execute([':product_id' => $product_id_to_delete]);
+            // Rediriger pour éviter la resoumission du formulaire
+            header('Location: /profil?action=deleted');
+            exit;
+        } else {
+            // Tentative de suppression d'un produit non autorisé ou inexistant
+            header('Location: /profil?action=delete_error');
+            exit;
+        }
+    }
+}
+
 $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
 $stmt->execute(['id' => $id]);
 $etudiant = $stmt->fetchObject(Etudiant::class);
@@ -37,6 +90,22 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
     $profileImg = '/public/images/default.png';
 }
 ?>
+
+<!-- Section de Notification -->
+<?php if ($notification): ?>
+<section class="container mx-auto px-4 mt-4">
+    <div class="p-4 rounded-lg <?= $notification['type'] === 'success' ? 'bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-200' : 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-200' ?> flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <?php if ($notification['type'] === 'success'): ?>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <?php else: ?>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <?php endif; ?>
+        </svg>
+        <?= htmlspecialchars($notification['message']) ?>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- Bannière de l'utilisateur -->
 <section class="bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-gray-900 py-8 md:py-12">
@@ -101,12 +170,12 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
 
             <!-- Boutons d'action -->
             <div class="mt-4 md:mt-0 flex flex-col gap-3">
-                <button class="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 text-white font-medium rounded-lg shadow hover:opacity-90 transition-all duration-300">
+                <a href="/edit_profile" class="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 text-white font-medium rounded-lg shadow hover:opacity-90 transition-all duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                     </svg>
                     Modifier le profil
-                </button>
+                </a>
                 <button class="flex items-center justify-center px-4 py-2 bg-white text-gray-700 font-medium border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition-all duration-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-700">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -156,55 +225,67 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
         <?php if (count($produits) > 0): ?>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <?php foreach ($produits as $produit): ?>
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
-                        <!-- Image du produit -->
-                        <div class="relative h-48 bg-gray-200 dark:bg-gray-700">
-                            <?php if ($produit->getImage()): ?>
-                                <img src="/images/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="w-full h-full object-cover" />
-                            <?php else: ?>
-                                <div class="flex items-center justify-center w-full h-full text-gray-500 dark:text-gray-400">
-                                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:border dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1">
+                        <div class="relative">
+                            <div class="absolute top-0 right-0 -mt-10 -mr-10 h-20 w-20 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-600/20 to-purple-700/20 blur-lg opacity-50"></div>
+                            <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
+                            <div class="relative z-10">
+                                <!-- Image du produit -->
+                                <div class="relative h-60">
+                                    <?php if ($produit->getImage()): ?>
+                                        <img src="/images/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="w-full h-full object-cover" />
+                                    <?php else: ?>
+                                        <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Menu d'options (trois points) -->
+                                    <div class="absolute top-2 right-2">
+                                        <button class="p-1 bg-white rounded-full shadow-md text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                            <?php endif; ?>
 
-                            <!-- Menu d'options (trois points) -->
-                            <div class="absolute top-2 right-2">
-                                <button class="p-1 bg-white rounded-full shadow-md text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors duration-200">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                                <!-- Contenu du produit -->
+                                <div class="p-5 flex flex-col flex-grow">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2"><?= htmlspecialchars($produit->getNom()) ?></h3>
 
-                        <!-- Contenu du produit -->
-                        <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2"><?= htmlspecialchars($produit->getNom()) ?></h3>
+                                    <!-- Description avec limite de hauteur et fadeout -->
+                                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow relative">
+                                        <div class="h-24 overflow-hidden">
+                                            <p><?= nl2br(htmlspecialchars($produit->getDescription())) ?></p>
+                                        </div>
+                                        <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-gray-800"></div>
+                                    </div>
 
-                            <!-- Description avec limite de hauteur -->
-                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-4 h-20 overflow-hidden relative">
-                                <p><?= nl2br(htmlspecialchars($produit->getDescription())) ?></p>
-                                <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-gray-800"></div>
-                            </div>
+                                    <!-- Prix et statut -->
+                                    <div class="flex justify-between items-center mt-auto mb-3">
+                                        <div class="flex items-center">
+                                            <span class="text-lg font-bold text-gray-900 dark:text-white"><?= htmlspecialchars($produit->getPrix()) ?> <?= htmlspecialchars($produit->getDevis()) ?></span>
+                                        </div>
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded dark:bg-green-900 dark:text-green-200">Actif</span>
+                                    </div>
 
-                            <!-- Prix et statut -->
-                            <div class="flex justify-between items-center mt-auto mb-3">
-                                <div class="flex items-center">
-                                    <span class="text-lg font-bold text-gray-900 dark:text-white"><?= htmlspecialchars($produit->getPrix()) ?> <?= htmlspecialchars($produit->getDevis()) ?></span>
+                                    <!-- Boutons d'action -->
+                                    <div class="grid grid-cols-2 gap-3 mt-3">
+                                        <a href="/edit_produit?id=<?= htmlspecialchars($produit->getId()) ?>" class="text-center px-3 py-2 text-sm bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600">
+                                            Modifier
+                                        </a>
+                                        <form action="/profil" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                                            <input type="hidden" name="action" value="delete_product">
+                                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($produit->getId()) ?>">
+                                            <button type="submit" class="w-full px-3 py-2 text-sm bg-white border border-gray-300 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-red-400 dark:hover:bg-red-900/20">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded dark:bg-green-900 dark:text-green-200">Actif</span>
-                            </div>
-
-                            <!-- Boutons d'action -->
-                            <div class="grid grid-cols-2 gap-3 mt-3">
-                                <button class="px-3 py-2 text-sm bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600">
-                                    Modifier
-                                </button>
-                                <button class="px-3 py-2 text-sm bg-white border border-gray-300 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-red-400 dark:hover:bg-red-900/20">
-                                    Supprimer
-                                </button>
                             </div>
                         </div>
                     </div>

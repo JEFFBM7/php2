@@ -7,6 +7,7 @@ class  Etudiant {
     private $promotion;
     private $telephone;
     private $password;
+    private $imageprofil;
 
     public function getId() {
         return $this->id;
@@ -22,5 +23,8 @@ class  Etudiant {
     }
     public function getPassword() {
         return $this->password;
+    }
+    public function getImageprofil() {
+        return $this->imageprofil;
     }
 }

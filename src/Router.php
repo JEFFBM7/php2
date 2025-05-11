@@ -15,6 +15,9 @@ class Router {
         // Désactiver complètement le basePath pour éviter les problèmes de correspondance
         $this->router->setBasePath('');
         $this->viewsPath = $viewsPath;
+
+        // Ajout de la nouvelle route pour les détails du produit
+        $this->router->map('GET', '/produit/[i:id]', 'produit_detail', 'produit_detail');
     }
 
     /**
@@ -125,12 +128,7 @@ class Router {
                 ];
                 
                 // Ajouter les liens de connexion ou de profil selon l'état de connexion
-                if (!$isLoggedIn) {
-                    $navItems['/login'] = 'Connexion';
-                } else {
-                    $navItems['/profil'] = 'Mon profil';
-                    $navItems['/logout'] = 'Déconnexion';
-                }
+           
                 
                 $currentPath = $_SERVER['REQUEST_URI'];
                 

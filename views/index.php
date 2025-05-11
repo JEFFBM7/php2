@@ -74,143 +74,167 @@ $title = 'TrucsPasChers - Accueil';
         <!-- Grille de produits -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Carte de produit 1 - Modèle amélioré -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:border dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1">
                 <div class="relative">
-                    <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded">-20%</span>
-                    <img class="w-full h-60 object-cover" src="/images/téléchargement.png" alt="Apple Watch">
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Électronique</span>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                            <span class="text-xs font-medium ml-1">4.5</span>
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 h-20 w-20 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-600/20 to-purple-700/20 blur-lg opacity-50"></div>
+                    <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
+                    <div class="relative z-10">
+                        <div class="relative h-60">
+                            <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded">-20%</span>
+                            <img class="w-full h-full object-cover" src="/images/téléchargement.png" alt="Apple Watch">
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Électronique</span>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium ml-1">4.5</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Apple Watch Series 7</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
+                                Une montre connectée élégante avec des fonctionnalités avancées pour suivre votre santé et rester connecté.
+                            </p>
+                            <div class="flex justify-between items-center mt-auto">
+                                <div class="flex items-center">
+                                    <span class="text-lg font-bold text-gray-900 dark:text-white">299 €</span>
+                                    <span class="ml-2 text-sm line-through text-gray-500">379 €</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Jeff</span>
+                            </div>
+                            <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Ajouter au panier
+                            </button>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Apple Watch Series 7</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
-                        Une montre connectée élégante avec des fonctionnalités avancées pour suivre votre santé et rester connecté.
-                    </p>
-                    <div class="flex justify-between items-center mt-auto">
-                        <div class="flex items-center">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white">299 €</span>
-                            <span class="ml-2 text-sm line-through text-gray-500">379 €</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Jeff</span>
-                    </div>
-                    <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Ajouter au panier
-                    </button>
                 </div>
             </div>
 
             <!-- Carte de produit 2 -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:border dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1">
                 <div class="relative">
-                    <span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-medium px-2 py-0.5 rounded">Nouveau</span>
-                    <img class="w-full h-60 object-cover" src="/images/681879d740a7c.png" alt="Casque audio">
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Audio</span>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                            <span class="text-xs font-medium ml-1">4.8</span>
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 h-20 w-20 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-600/20 to-purple-700/20 blur-lg opacity-50"></div>
+                    <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
+                    <div class="relative z-10">
+                        <div class="relative h-60">
+                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-medium px-2 py-0.5 rounded">Nouveau</span>
+                            <img class="w-full h-full object-cover" src="/images/681879d740a7c.png" alt="Casque audio">
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Audio</span>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium ml-1">4.8</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Casque Bluetooth Premium</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
+                                Un son immersif avec réduction de bruit active et une autonomie exceptionnelle de 30 heures.
+                            </p>
+                            <div class="flex justify-between items-center mt-auto">
+                                <div class="flex items-center">
+                                    <span class="text-lg font-bold text-gray-900 dark:text-white">199 €</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Marie</span>
+                            </div>
+                            <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Ajouter au panier
+                            </button>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Casque Bluetooth Premium</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
-                        Un son immersif avec réduction de bruit active et une autonomie exceptionnelle de 30 heures.
-                    </p>
-                    <div class="flex justify-between items-center mt-auto">
-                        <div class="flex items-center">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white">199 €</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Marie</span>
-                    </div>
-                    <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Ajouter au panier
-                    </button>
                 </div>
             </div>
 
             <!-- Carte de produit 3 -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1 hidden md:flex">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:border dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1 hidden md:flex">
                 <div class="relative">
-                    <img class="w-full h-60 object-cover" src="/images/681880c705317.png" alt="Smartphone">
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Téléphonie</span>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                            <span class="text-xs font-medium ml-1">4.2</span>
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 h-20 w-20 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-600/20 to-purple-700/20 blur-lg opacity-50"></div>
+                    <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
+                    <div class="relative z-10">
+                        <div class="relative h-60">
+                            <img class="w-full h-full object-cover" src="/images/681880c705317.png" alt="Smartphone">
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Téléphonie</span>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium ml-1">4.2</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Smartphone Ultra HD</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
+                                Un appareil performant avec un appareil photo de qualité professionnelle et une batterie longue durée.
+                            </p>
+                            <div class="flex justify-between items-center mt-auto">
+                                <div class="flex items-center">
+                                    <span class="text-lg font-bold text-gray-900 dark:text-white">499 €</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Thomas</span>
+                            </div>
+                            <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Ajouter au panier
+                            </button>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Smartphone Ultra HD</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
-                        Un appareil performant avec un appareil photo de qualité professionnelle et une batterie longue durée.
-                    </p>
-                    <div class="flex justify-between items-center mt-auto">
-                        <div class="flex items-center">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white">499 €</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Thomas</span>
-                    </div>
-                    <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Ajouter au panier
-                    </button>
                 </div>
             </div>
 
             <!-- Carte de produit 4 -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1 hidden lg:flex">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:border dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1 hidden lg:flex">
                 <div class="relative">
-                    <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-medium px-2 py-0.5 rounded">Populaire</span>
-                    <img class="w-full h-60 object-cover" src="/images/68188270086b1.png" alt="Tablette">
-                </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Tablettes</span>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                            <span class="text-xs font-medium ml-1">4.9</span>
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 h-20 w-20 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-600/20 to-purple-700/20 blur-lg opacity-50"></div>
+                    <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
+                    <div class="relative z-10">
+                        <div class="relative h-60">
+                            <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-medium px-2 py-0.5 rounded">Populaire</span>
+                            <img class="w-full h-full object-cover" src="/images/68188270086b1.png" alt="Tablette">
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Tablettes</span>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium ml-1">4.9</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Tablette Graphique Pro</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
+                                Idéale pour les designers et artistes, avec une sensibilité à la pression avancée et un écran haute résolution.
+                            </p>
+                            <div class="flex justify-between items-center mt-auto">
+                                <div class="flex items-center">
+                                    <span class="text-lg font-bold text-gray-900 dark:text-white">349 €</span>
+                                    <span class="ml-2 text-sm line-through text-gray-500">429 €</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Sophie</span>
+                            </div>
+                            <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Ajouter au panier
+                            </button>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Tablette Graphique Pro</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
-                        Idéale pour les designers et artistes, avec une sensibilité à la pression avancée et un écran haute résolution.
-                    </p>
-                    <div class="flex justify-between items-center mt-auto">
-                        <div class="flex items-center">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white">349 €</span>
-                            <span class="ml-2 text-sm line-through text-gray-500">429 €</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par : Sophie</span>
-                    </div>
-                    <button class="mt-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg text-white px-4 py-2 w-full font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Ajouter au panier
-                    </button>
                 </div>
             </div>
         </div>
