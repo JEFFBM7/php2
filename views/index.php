@@ -1,5 +1,26 @@
 <?php
 $title = 'TrucsPasChers - Accueil';
+require_once __DIR__ . '/../vendor/autoload.php';
+use App\Model\Etudiant;
+
+// Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Récupérer les informations de l'étudiant connecté si disponible
+$etudiant = null;
+if (!empty($_SESSION['user_id'])) {
+    $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
+    $stmt->execute([':id' => $_SESSION['user_id']]);
+    $etudiant = $stmt->fetchObject(Etudiant::class);
+    
+    // Stocker l'objet étudiant dans la session pour y accéder facilement
+    $_SESSION['student'] = $etudiant;
+}
 ?>
 <section class="bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-gray-900 min-h-screen">
     <div class="py-12 px-4 mx-auto max-w-screen-xl text-center lg:py-20 lg:px-12 relative overflow-hidden">
@@ -57,6 +78,32 @@ $title = 'TrucsPasChers - Accueil';
 <!-- Section des produits -->
 <section id="produits" class="bg-gray-50 py-12 antialiased dark:bg-gray-900 md:py-16">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-8 2xl:px-0">
+        <!-- Affichage de la photo de profil de l'utilisateur connecté -->
+        <?php if (!empty($_SESSION['student'])): ?>
+        <div class="flex items-center justify-end mb-4">
+            <div class="flex items-center space-x-3">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Bonjour, <?= htmlspecialchars($_SESSION['student']->getNom()) ?>
+                </span>
+                <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-indigo-500 shadow-md">
+                    <?php if (!empty($_SESSION['student']->getPhotoProfile())): ?>
+                        <img src="/public/images/profile/uploads/<?= htmlspecialchars($_SESSION['student']->getPhotoProfile()) ?>" 
+                             alt="Photo de profil de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
+                             class="w-full h-full object-cover">
+                    <?php elseif (!empty($_SESSION['student']->getAvatar())): ?>
+                        <img src="/public/images/profile/avatars/<?= htmlspecialchars($_SESSION['student']->getAvatar()) ?>" 
+                             alt="Avatar de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
+                             class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <img src="/public/images/default.png" 
+                             alt="Avatar par défaut" 
+                             class="w-full h-full object-cover">
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Titre de section avec sous-titre -->
         <div class="mb-10 text-center">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl mb-2">Nos produits populaires</h2>
@@ -81,7 +128,7 @@ $title = 'TrucsPasChers - Accueil';
                     <div class="relative z-10">
                         <div class="relative h-60">
                             <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded">-20%</span>
-                            <img class="w-full h-full object-cover" src="/images/téléchargement.png" alt="Apple Watch">
+                            <img class="w-full h-full object-cover" src="/public/images/produits/téléchargement.png" alt="Apple Watch">
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
                             <div class="flex justify-between items-center mb-2">
@@ -123,7 +170,7 @@ $title = 'TrucsPasChers - Accueil';
                     <div class="relative z-10">
                         <div class="relative h-60">
                             <span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-medium px-2 py-0.5 rounded">Nouveau</span>
-                            <img class="w-full h-full object-cover" src="/images/681879d740a7c.png" alt="Casque audio">
+                            <img class="w-full h-full object-cover" src="/public/images/produits/681879d740a7c.png" alt="Casque audio">
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
                             <div class="flex justify-between items-center mb-2">
@@ -163,7 +210,7 @@ $title = 'TrucsPasChers - Accueil';
                     <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
                     <div class="relative z-10">
                         <div class="relative h-60">
-                            <img class="w-full h-full object-cover" src="/images/681880c705317.png" alt="Smartphone">
+                            <img class="w-full h-full object-cover" src="/public/images/produits/681880c705317.png" alt="Smartphone">
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
                             <div class="flex justify-between items-center mb-2">
@@ -204,7 +251,7 @@ $title = 'TrucsPasChers - Accueil';
                     <div class="relative z-10">
                         <div class="relative h-60">
                             <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-medium px-2 py-0.5 rounded">Populaire</span>
-                            <img class="w-full h-full object-cover" src="/images/68188270086b1.png" alt="Tablette">
+                            <img class="w-full h-full object-cover" src="/public/images/produits/68188270086b1.png" alt="Tablette">
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
                             <div class="flex justify-between items-center mb-2">
@@ -296,13 +343,38 @@ $title = 'TrucsPasChers - Accueil';
     </div>
 </section>
 
+<?php
+// Assurez-vous d'avoir démarré la session en début de script
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
+<?php if (empty($_SESSION['student'])): ?>
 <!-- Call to Action -->
 <section class="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 py-12 md:py-16">
     <div class="max-w-screen-xl mx-auto px-4 lg:px-8 text-center">
         <h2 class="text-2xl font-bold text-white sm:text-3xl mb-4">Prêt à découvrir nos produits ?</h2>
         <p class="text-white text-opacity-90 mb-8 max-w-2xl mx-auto">Rejoignez notre communauté de clients satisfaits et trouvez les produits qui correspondent à vos besoins à des prix imbattables.</p>
-        <a href="/singup" class="inline-block px-6 py-3 bg-white text-gray-900 font-medium rounded-lg shadow-lg hover:bg-gray-100 transition-all duration-300">
+        <a href="/signup" class="inline-block px-6 py-3 bg-white text-gray-900 font-medium rounded-lg shadow-lg hover:bg-gray-100 transition-all duration-300">
             S'inscrire maintenant
         </a>
     </div>
 </section>
+<?php endif; ?>
+
+<!-- Script pour démarrer automatiquement le tutoriel -->
+<?php if (isset($_GET['show_tutorial'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Petit délai avant de démarrer le tutoriel pour s'assurer que tout est bien chargé
+        setTimeout(function() {
+            // Trouver et cliquer sur le bouton de tutoriel
+            const tutorialBtn = document.getElementById('start-tutorial-btn');
+            if (tutorialBtn) {
+                tutorialBtn.click();
+            }
+        }, 1000);
+    });
+</script>
+<?php endif; ?>

@@ -1,9 +1,56 @@
 <?php
 $title = 'À propos - TrucsPasChers';
+require_once __DIR__ . '/../vendor/autoload.php';
+use App\Model\Etudiant;
+
+// Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Récupérer les informations de l'étudiant connecté si disponible
+$etudiant = null;
+if (!empty($_SESSION['user_id'])) {
+    $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
+    $stmt->execute([':id' => $_SESSION['user_id']]);
+    $etudiant = $stmt->fetchObject(Etudiant::class);
+    
+    // Stocker l'objet étudiant dans la session pour y accéder facilement
+    $_SESSION['student'] = $etudiant;
+}
 ?>
 
 <section class="bg-gradient-to-b from-white to-gray-100 dark:from-gray-800 dark:to-gray-900 py-12">
     <div class="container mx-auto px-6 lg:px-8">
+        <!-- Affichage de la photo de profil de l'utilisateur connecté -->
+        <?php if (!empty($_SESSION['student'])): ?>
+        <div class="flex items-center justify-end mb-4">
+            <div class="flex items-center space-x-3">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Bonjour, <?= htmlspecialchars($_SESSION['student']->getNom()) ?>
+                </span>
+                <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-indigo-500 shadow-md">
+                    <?php if (!empty($_SESSION['student']->getPhotoProfile())): ?>
+                        <img src="/public/images/profile/uploads/<?= htmlspecialchars($_SESSION['student']->getPhotoProfile()) ?>" 
+                             alt="Photo de profil de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
+                             class="w-full h-full object-cover">
+                    <?php elseif (!empty($_SESSION['student']->getAvatar())): ?>
+                        <img src="/public/images/profile/avatars/<?= htmlspecialchars($_SESSION['student']->getAvatar()) ?>" 
+                             alt="Avatar de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
+                             class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <img src="/public/images/default.png" 
+                             alt="Avatar par défaut" 
+                             class="w-full h-full object-cover">
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+        
         <!-- En-tête de la page -->
         <div class="text-center max-w-3xl mx-auto mb-12">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white md:text-4xl lg:text-5xl mb-4">

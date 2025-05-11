@@ -40,11 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_name'] = $user->getNom();
         
+        // Vérifier si c'est le premier login pour déclencher le tutoriel
+        $_SESSION['first_login'] = !$user->getLastLogin();
+        
+        // Mettre à jour la date de dernière connexion
+        $updateStmt = $pdo->prepare('UPDATE etudiant SET last_login = NOW() WHERE id = :id');
+        $updateStmt->execute([':id' => $user->getId()]);
+        
         // Débogage de la redirection
         error_log("Connexion réussie pour l'utilisateur: " . $_SESSION['user_name'] . " (ID: " . $_SESSION['user_id'] . ")");
         
-        // Redirection simplifiée vers la page profil
-        header('Location: /profil');
+        // Redirection vers la page d'accueil pour le premier login (pour le tutoriel)
+        if ($_SESSION['first_login']) {
+            header('Location: /?show_tutorial=1');
+        } else {
+            // Redirection simplifiée vers la page profil pour les utilisateurs existants
+            header('Location: /profil');
+        }
       
         exit;
     } else {

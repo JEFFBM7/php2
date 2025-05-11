@@ -1,0 +1,18 @@
+/* Styles pour la sélection d'avatar */
+.avatar-option {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.avatar-option input:checked + label {
+  transform: scale(1.05);
+}
+
+.avatar-option label {
+  transition: all 0.3s ease;
+}
+
+.avatar-option label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

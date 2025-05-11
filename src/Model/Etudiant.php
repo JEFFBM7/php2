@@ -7,7 +7,9 @@ class  Etudiant {
     private $promotion;
     private $telephone;
     private $password;
-    private $imageprofil;
+    private $last_login;
+    private $avatar;
+    private $photo_profile;
 
     public function getId() {
         return $this->id;
@@ -24,7 +26,16 @@ class  Etudiant {
     public function getPassword() {
         return $this->password;
     }
-    public function getImageprofil() {
-        return $this->imageprofil;
+    
+    public function getLastLogin() {
+        return $this->last_login;
+    }
+    
+    public function getAvatar() {
+        return $this->avatar;
+    }
+    
+    public function getPhotoProfile() {
+        return $this->photo_profile;
     }
 }

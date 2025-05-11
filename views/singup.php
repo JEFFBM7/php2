@@ -1,6 +1,28 @@
 <?php
 $title = 'Inscription - TrucsPasChers';
 require_once __DIR__ . '/../vendor/autoload.php';
+
+// Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Vérifier si l'utilisateur est déjà connecté
+if (!empty($_SESSION['user_id'])) {
+    // Rediriger vers la page de profil, car l'inscription n'est pas nécessaire
+    header('Location: /profil');
+    exit;
+}
+
+// Liste des avatars disponibles
+$avatarsDir = __DIR__ . '/../public/images/profile/avatars/';
+$avatars = [];
+if (is_dir($avatarsDir)) {
+    foreach (glob($avatarsDir . '*.svg') as $avatarPath) {
+        $avatars[] = basename($avatarPath);
+    }
+}
+
 $pdo = new PDO('mysql:host=localhost;dbname=tp','root','root', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
@@ -8,18 +30,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['username'];
     $promotion = $_POST['promotion'];
     $telephone = $_POST['telephone'];
+    $avatar = isset($_POST['avatar']) ? $_POST['avatar'] : 'default.svg';
+    
     // get next id
     $stmtMax = $pdo->query('SELECT MAX(id) AS max_id FROM etudiant');
     $maxId = $stmtMax->fetch(PDO::FETCH_ASSOC)['max_id'] ?? 0;
     $newId = $maxId + 1;
     // insert new student
-    $stmt = $pdo->prepare('INSERT INTO etudiant (nom, promotion, telephone, password) VALUES (:nom, :promotion, :telephone, :password)');
+    $stmt = $pdo->prepare('INSERT INTO etudiant (nom, promotion, telephone, password, avatar) VALUES (:nom, :promotion, :telephone, :password, :avatar)');
     $stmt->execute([
         ':nom' => $nom,
         ':promotion' => $promotion,
         ':telephone' => $telephone,
-        ':password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
-        
+        ':password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
+        ':avatar' => $avatar
     ]);
     header('Location: /');
     exit;
@@ -43,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="relative z-10">
-                            <img src="/images/logo1.png" alt="TrucsPasChers" class="h-12 mb-6 mx-auto lg:mx-0">
+                            <img src="/public/images/logo1.png" alt="TrucsPasChers" class="h-12 mb-6 mx-auto lg:mx-0">
                             
                             <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Rejoignez notre communauté</h2>
                             
@@ -160,6 +184,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Minimum 8 caractères avec chiffres et lettres</p>
                             </div>
                             
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                                    Choisissez un avatar
+                                </label>
+                                <div class="flex flex-col md:flex-row gap-6 mb-4">
+                                    <div class="grid grid-cols-3 gap-4 flex-1">
+                                        <?php foreach ($avatars as $avatar): ?>
+                                            <div class="avatar-option">
+                                                <input type="radio" name="avatar" id="avatar-<?php echo $avatar; ?>" 
+                                                       value="<?php echo $avatar; ?>" <?php echo $avatar === 'default.svg' ? 'checked' : ''; ?> 
+                                                       class="hidden peer" />
+                                                <label for="avatar-<?php echo $avatar; ?>" 
+                                                       class="flex flex-col items-center justify-center p-2 rounded-lg border-2 
+                                                              cursor-pointer border-gray-200 dark:border-gray-700 
+                                                              peer-checked:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                    <img src="/public/images/profile/avatars/<?php echo $avatar; ?>" 
+                                                         alt="Avatar" class="w-16 h-16 mb-1" />
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    
+                                    <div class="flex flex-col items-center bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Avatar sélectionné</p>
+                                        <div class="w-24 h-24 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full p-1">
+                                            <img id="avatar-preview" src="/public/images/profile/avatars/default.svg" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="flex items-start">
                                 <div class="flex items-center h-5">
                                     <input id="terms" aria-describedby="terms" type="checkbox" required class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800">
@@ -199,3 +254,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </section>
+
+<script src="/js/avatar-selector.js"></script>

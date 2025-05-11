@@ -122,7 +122,28 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
             <div class="relative group">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-full opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
                 <div class="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden shadow-xl">
-                    <img src="<?= htmlspecialchars($profileImg) ?>" alt="Photo de profil de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover" />
+                    <?php if ($etudiant->getPhotoProfile()): ?>
+                        <!-- Si la photo est un chemin de fichier -->
+                        <img
+                            src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>"
+                            alt="Photo de profil de <?= htmlspecialchars($etudiant->getNom()) ?>"
+                            class="w-full h-full object-cover" 
+                        />
+                    <?php elseif ($etudiant->getAvatar()): ?>
+                        <!-- Si l'utilisateur a un avatar prédéfini -->
+                        <img
+                            src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>"
+                            alt="Avatar de <?= htmlspecialchars($etudiant->getNom()) ?>"
+                            class="w-full h-full object-cover" 
+                        />
+                    <?php else: ?>
+                        <!-- Image par défaut si aucune photo en BDD -->
+                        <img
+                            src="/public/images/default.png"
+                            alt="Photo de profil par défaut"
+                            class="w-full h-full object-cover" 
+                        />
+                    <?php endif; ?>
                 </div>
             </div>
 

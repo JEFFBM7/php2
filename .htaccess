@@ -1,5 +1,11 @@
 RewriteEngine On
 
+# Redirection spécifique pour les fichiers du dossier js
+RewriteRule ^js/(.*)$ assets/js/$1 [L]
+
+# Redirection des images vers le bon dossier
+RewriteRule ^images/(.*)$ public/images/produits/$1 [L]
+
 # Permettre l'accès direct aux répertoires et fichiers existants
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]

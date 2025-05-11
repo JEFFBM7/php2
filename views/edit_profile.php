@@ -21,6 +21,15 @@ $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
 $id = $_SESSION['user_id'];
 $notification = null;
 
+// Liste des avatars disponibles
+$avatarsDir = __DIR__ . '/../public/images/profile/avatars/';
+$avatars = [];
+if (is_dir($avatarsDir)) {
+    foreach (glob($avatarsDir . '*.svg') as $avatarPath) {
+        $avatars[] = basename($avatarPath);
+    }
+}
+
 $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
 $stmt->execute(['id' => $id]);
 $etudiant = $stmt->fetchObject(Etudiant::class);
@@ -35,6 +44,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom'] ?? $etudiant->getNom();
     $promotion = $_POST['promotion'] ?? $etudiant->getPromotion();
     $telephone = $_POST['telephone'] ?? $etudiant->getTelephone();
+    
+    // Gestion de l'avatar et photo de profil
+    $avatar = $_POST['avatar'] ?? $etudiant->getAvatar();
+    $useCustomPhoto = isset($_POST['use_custom_photo']) ? true : false;
+    
+    // Traitement de l'upload de photo si demandé
+    $customPhotoPath = null;
+    if ($useCustomPhoto && isset($_FILES['custom_photo']) && $_FILES['custom_photo']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . '/../public/images/profile/uploads/';
+        $fileName = uniqid() . '_' . basename($_FILES['custom_photo']['name']);
+        $uploadFile = $uploadDir . $fileName;
+        
+        // Vérification du type de fichier
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($fileInfo, $_FILES['custom_photo']['tmp_name']);
+        finfo_close($fileInfo);
+        
+        if (in_array($mimeType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES['custom_photo']['tmp_name'], $uploadFile)) {
+                $customPhotoPath = 'uploads/' . $fileName;
+                // Si l'utilisateur télécharge une photo personnalisée, on désactive l'avatar prédéfini
+                $avatar = null;
+            } else {
+                $notification = ['message' => 'Erreur lors du téléchargement de l\'image.', 'type' => 'error'];
+            }
+        } else {
+            $notification = ['message' => 'Le fichier doit être une image (JPG, PNG ou GIF).', 'type' => 'error'];
+        }
+    }
     
     // Gestion du mot de passe (optionnel)
     $password = $_POST['password'] ?? '';
@@ -68,21 +107,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             if (!empty($password)) {
                 // Mise à jour avec nouveau mot de passe
-                $stmtUpdate = $pdo->prepare('UPDATE etudiant SET nom = :nom, promotion = :promotion, telephone = :telephone, password = :password WHERE id = :id');
+                $stmtUpdate = $pdo->prepare('UPDATE etudiant SET nom = :nom, promotion = :promotion, telephone = :telephone, password = :password, avatar = :avatar, photo_profile = :photo_profile WHERE id = :id');
                 $stmtUpdate->execute([
                     ':nom' => $nom,
                     ':promotion' => $promotion,
                     ':telephone' => $telephone,
                     ':password' => password_hash($password, PASSWORD_DEFAULT),
+                    ':avatar' => $avatar,
+                    ':photo_profile' => $customPhotoPath,
                     ':id' => $id
                 ]);
             } else {
                 // Mise à jour sans changer le mot de passe
-                $stmtUpdate = $pdo->prepare('UPDATE etudiant SET nom = :nom, promotion = :promotion, telephone = :telephone WHERE id = :id');
+                $stmtUpdate = $pdo->prepare('UPDATE etudiant SET nom = :nom, promotion = :promotion, telephone = :telephone, avatar = :avatar, photo_profile = :photo_profile WHERE id = :id');
                 $stmtUpdate->execute([
                     ':nom' => $nom,
                     ':promotion' => $promotion,
                     ':telephone' => $telephone,
+                    ':avatar' => $avatar,
+                    ':photo_profile' => $customPhotoPath,
                     ':id' => $id
                 ]);
             }
@@ -134,19 +177,25 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
             
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                 <div class="p-6 md:p-8">
-                    <!-- En-tête avec photo de profil -->
+                    <!-- En-tête avec photo de profil et avatar actuel -->
                     <div class="flex flex-col items-center mb-8">
                         <div class="relative mb-4 group">
                             <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-full opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
                             <div class="relative w-24 h-24 rounded-full overflow-hidden shadow-lg">
-                                <img src="<?= htmlspecialchars($profileImg) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                                <?php if($etudiant->getPhotoProfile()): ?>
+                                    <img src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                                <?php elseif($etudiant->getAvatar()): ?>
+                                    <img src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>" alt="Avatar" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                    <img src="/public/images/profile/avatars/default.svg" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                <?php endif; ?>
                             </div>
                         </div>
                         <h2 class="text-2xl font-bold text-gray-900 dark:text-white"><?= htmlspecialchars($etudiant->getNom()) ?></h2>
                         <p class="text-gray-600 dark:text-gray-400">ID: <?= htmlspecialchars($etudiant->getId()) ?></p>
                     </div>
 
-                    <form action="/edit_profile" method="post" class="space-y-6">
+                    <form action="/edit_profile" method="post" class="space-y-6" enctype="multipart/form-data">
                         <!-- Nom d'utilisateur -->
                         <div>
                             <label for="nom" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
@@ -173,6 +222,90 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                             </label>
                             <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($etudiant->getTelephone()) ?>" required
                                 class="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        </div>
+                        
+                        <!-- Sélection d'avatar -->
+                        <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Changer d'image de profil</h3>
+                            
+                            <div class="mb-6">
+                                <div class="flex items-center mb-4">
+                                    <input id="use-avatar" type="radio" name="profile_type" value="avatar" 
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+                                           <?php echo (!$etudiant->getPhotoProfile()) ? 'checked' : ''; ?>>
+                                    <label for="use-avatar" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Utiliser un avatar prédéfini
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="use-custom-photo" type="radio" name="profile_type" value="custom" 
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                           <?php echo ($etudiant->getPhotoProfile()) ? 'checked' : ''; ?>>
+                                    <label for="use-custom-photo" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Télécharger ma propre photo
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Section avatars prédéfinis -->
+                            <div id="avatars-section" class="<?php echo ($etudiant->getPhotoProfile()) ? 'hidden' : ''; ?>">
+                                <div class="flex flex-col md:flex-row gap-6">
+                                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-4 flex-1">
+                                        <?php foreach ($avatars as $avatar): ?>
+                                            <div class="avatar-option">
+                                                <input type="radio" name="avatar" id="avatar-<?php echo $avatar; ?>" 
+                                                    value="<?php echo $avatar; ?>" <?php echo ($avatar === $etudiant->getAvatar() || ($avatar === 'default.svg' && !$etudiant->getAvatar() && !$etudiant->getPhotoProfile())) ? 'checked' : ''; ?> 
+                                                    class="hidden peer" />
+                                                <label for="avatar-<?php echo $avatar; ?>" 
+                                                    class="flex flex-col items-center justify-center p-2 rounded-lg border-2 
+                                                        cursor-pointer border-gray-200 dark:border-gray-700 
+                                                        peer-checked:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                    <img src="/public/images/profile/avatars/<?php echo $avatar; ?>" 
+                                                        alt="Avatar" class="w-16 h-16 mb-1" />
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    
+                                    <div class="flex flex-col items-center bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Avatar sélectionné</p>
+                                        <div class="w-24 h-24 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full p-1">
+                                            <img id="avatar-preview" src="/public/images/profile/avatars/<?= $etudiant->getAvatar() ?: 'default.svg' ?>" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Section téléchargement de photo -->
+                            <div id="custom-photo-section" class="<?php echo (!$etudiant->getPhotoProfile()) ? 'hidden' : ''; ?>">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="custom_photo">
+                                        Télécharger votre photo
+                                    </label>
+                                    <div class="flex items-center justify-center w-full">
+                                        <label for="custom_photo" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
+                                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                                </svg>
+                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Cliquez pour télécharger</span></p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG ou GIF</p>
+                                            </div>
+                                            <input id="custom_photo" name="custom_photo" type="file" class="hidden" accept="image/png, image/jpeg, image/gif" />
+                                            <input type="hidden" name="use_custom_photo" id="use_custom_photo" value="<?php echo ($etudiant->getPhotoProfile()) ? '1' : '0'; ?>" />
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col items-center mt-4">
+                                    <?php if($etudiant->getPhotoProfile()): ?>
+                                        <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Photo actuelle</div>
+                                        <div class="w-32 h-32 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                            <img src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo actuelle" class="w-full h-full object-cover" id="current-photo-preview">
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Section mot de passe (optionnel) -->
@@ -264,3 +397,6 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
         </div>
     </div>
 </section>
+
+<script src="/js/avatar-selector.js"></script>
+<script src="/js/photo-profile-manager.js"></script>

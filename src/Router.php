@@ -15,9 +15,8 @@ class Router {
         // Désactiver complètement le basePath pour éviter les problèmes de correspondance
         $this->router->setBasePath('');
         $this->viewsPath = $viewsPath;
-
-        // Ajout de la nouvelle route pour les détails du produit
-        $this->router->map('GET', '/produit/[i:id]', 'produit_detail', 'produit_detail');
+        
+        // La route pour les détails du produit est maintenant définie dans index.php
     }
 
     /**
@@ -128,7 +127,11 @@ class Router {
                 ];
                 
                 // Ajouter les liens de connexion ou de profil selon l'état de connexion
-           
+                $isLoggedIn = $this->isLoggedIn();
+                if (!$isLoggedIn) {
+                    $navItems['/login'] = 'Connexion';
+                    $navItems['/singup'] = 'Inscription';
+                }
                 
                 $currentPath = $_SERVER['REQUEST_URI'];
                 
@@ -174,9 +177,10 @@ class Router {
             
         ];
         
-        // Ajouter les liens de connexion selon l'état de connexion
+        // Ajouter les liens de connexion et d'inscription uniquement si l'utilisateur n'est pas connecté
         if (!$isLoggedIn) {
             $navItems['/login'] = 'Connexion';
+            $navItems['/singup'] = 'Inscription';
         }
         
         $currentPath = $_SERVER['REQUEST_URI'];

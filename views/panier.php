@@ -14,6 +14,47 @@ $panier = Panier::getContenu();
 $total = Panier::getTotal();
 $nombreArticles = Panier::getNombreArticles();
 
+// Récupérer les informations des vendeurs (étudiants)
+$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
+
+// Récupérer tous les identifiants de produits dans le panier
+$produitIds = array_keys($panier);
+$vendeurs = [];
+
+if (!empty($produitIds)) {
+    // Récupérer les informations des vendeurs pour ces produits
+    $stmtProduits = $pdo->prepare('SELECT etudiant_id FROM produit WHERE id IN (' . implode(',', array_fill(0, count($produitIds), '?')) . ')');
+    $stmtProduits->execute($produitIds);
+    $etudiantIds = [];
+    
+    // Collecter tous les IDs d'étudiants uniques
+    while ($row = $stmtProduits->fetch(PDO::FETCH_ASSOC)) {
+        $etudiantIds[$row['etudiant_id']] = $row['etudiant_id'];
+    }
+    
+    if (!empty($etudiantIds)) {
+        // Récupérer les informations des étudiants
+        $stmtEtudiants = $pdo->prepare('SELECT * FROM etudiant WHERE id IN (' . implode(',', array_fill(0, count($etudiantIds), '?')) . ')');
+        $stmtEtudiants->execute(array_values($etudiantIds));
+        
+        while ($etudiant = $stmtEtudiants->fetchObject(\App\Model\Etudiant::class)) {
+            $vendeurs[$etudiant->getId()] = $etudiant;
+        }
+    }
+    
+    // Associer les vendeurs aux produits du panier
+    foreach ($produitIds as $produitId) {
+        $stmtVendeur = $pdo->prepare('SELECT etudiant_id FROM produit WHERE id = ?');
+        $stmtVendeur->execute([$produitId]);
+        $etudiantId = $stmtVendeur->fetchColumn();
+        if ($etudiantId && isset($vendeurs[$etudiantId])) {
+            $panier[$produitId]['vendeur_id'] = $etudiantId;
+        }
+    }
+}
+
 // Gérer le message de notification
 $notification = null;
 if (isset($_GET['action'])) {
@@ -103,6 +144,22 @@ if (isset($_GET['action'])) {
                                         <div>
                                             <h3 class="text-lg font-medium text-gray-900 dark:text-white"><?= htmlspecialchars($item['nom']) ?></h3>
                                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Prix unitaire: <?= htmlspecialchars($item['prix']) ?> <?= htmlspecialchars($item['devis']) ?></p>
+                                            
+                                            <?php if (isset($item['vendeur_id']) && isset($vendeurs[$item['vendeur_id']])): ?>
+                                            <div class="flex items-center mt-2">
+                                                <div class="w-5 h-5 rounded-full overflow-hidden mr-2">
+                                                    <?php $vendeur = $vendeurs[$item['vendeur_id']]; ?>
+                                                    <?php if ($vendeur->getPhotoProfile()): ?>
+                                                        <img src="/public/images/profile/<?= htmlspecialchars($vendeur->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                                    <?php elseif ($vendeur->getAvatar()): ?>
+                                                        <img src="/public/images/profile/avatars/<?= htmlspecialchars($vendeur->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                                    <?php else: ?>
+                                                        <img src="/public/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                                    <?php endif; ?>
+                                                </div>
+                                                <span class="text-xs text-gray-600 dark:text-gray-400">Vendeur: <?= htmlspecialchars($vendeur->getNom()) ?></span>
+                                            </div>
+                                            <?php endif; ?>
                                         </div>
                                         
                                         <div class="flex items-center justify-between mt-4">

@@ -11,6 +11,8 @@ require_once __DIR__ . '/../../src/Router.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+    <link rel="stylesheet" href="/css/avatar.css">
     <title><?= $title ?></title>
     <style>
     @keyframes shimmer {
@@ -22,11 +24,26 @@ require_once __DIR__ . '/../../src/Router.php';
             background-position: 200% 0;
         }
     }
+    
+    @keyframes pulse-slow {
+        0%, 100% {
+            opacity: 0.5;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+    }
 
     .animate-shimmer {
         background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
         background-size: 200% 100%;
         animation: shimmer 2s infinite;
+    }
+    
+    .animate-pulse {
+        animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
     .nav-indicator {
@@ -45,6 +62,231 @@ require_once __DIR__ . '/../../src/Router.php';
     .search-expanded {
         width: 250px;
     }
+    
+    /* Styles personnalisés pour les tooltips du tutoriel */
+    .customTooltip {
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        background-color: #fff;
+        color: #1f2937;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.08);
+        border: none;
+        border-top: 4px solid;
+        border-image: linear-gradient(to right, #4f46e5, #8b5cf6) 1;
+        max-width: 380px;
+        padding: 20px;
+        z-index: 9999;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .introjs-tooltip-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 12px;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+    }
+    
+    .introjs-tooltip-title:before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 24px;
+        background: linear-gradient(to bottom, #4f46e5, #8b5cf6);
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+    
+    .introjs-tooltiptext {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #4b5563;
+        margin-bottom: 15px;
+    }
+    
+    .introjs-bullets {
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .introjs-button {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 0 4px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        background-color: #f9fafb;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    
+    .introjs-button:hover {
+        background-color: #f3f4f6;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    }
+    
+    .introjs-button:active {
+        transform: translateY(0px);
+    }
+    
+    .introjs-nextbutton {
+        background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+        color: white;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .introjs-nextbutton:hover {
+        background: linear-gradient(135deg, #4338ca, #7c3aed);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+    
+    .introjs-nextbutton:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+    
+    .introjs-nextbutton:hover:before {
+        left: 100%;
+    }
+    
+    .introjs-bullets ul li a {
+        background-color: #d1d5db;
+    }
+    
+    .introjs-bullets ul li a.active {
+        background-color: #4f46e5;
+    }
+    
+    .introjs-progress {
+        background-color: #e5e7eb;
+    }
+    
+    .introjs-progressbar {
+        background: linear-gradient(to right, #4f46e5, #8b5cf6);
+    }
+    
+    .dark .customTooltip {
+        background-color: #1e1e2e;
+        color: #e5e7eb;
+        border-top: 4px solid;
+        border-image: linear-gradient(to right, #6366f1, #a78bfa) 1;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25), 0 4px 10px rgba(0,0,0,0.15);
+        backdrop-filter: blur(10px);
+    }
+    
+    .dark .introjs-tooltip-title {
+        color: #a78bfa;
+    }
+    
+    .dark .introjs-tooltip-title:before {
+        background: linear-gradient(to bottom, #6366f1, #a78bfa);
+    }
+    
+    .dark .introjs-tooltiptext {
+        color: #d1d5db;
+    }
+    
+    .dark .introjs-button {
+        background-color: #2d3748;
+        color: #e5e7eb;
+        border-color: #4b5563;
+    }
+    
+    .dark .introjs-button:hover {
+        background-color: #374151;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    
+    .dark .introjs-nextbutton {
+        background: linear-gradient(135deg, #6366f1, #a78bfa);
+        color: white;
+        border: none;
+    }
+    
+    .dark .introjs-nextbutton:hover {
+        background: linear-gradient(135deg, #5553cd, #9061f9);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    .dark .introjs-bullets ul li a {
+        background-color: #4b5563;
+    }
+    
+    .dark .introjs-bullets ul li a.active {
+        background-color: #818cf8;
+    }
+    
+    .dark .introjs-progress {
+        background-color: #374151;
+    }
+    
+    .dark .introjs-progressbar {
+        background: linear-gradient(to right, #6366f1, #a78bfa);
+    }
+    
+    .introjs-button {
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    
+    .introjs-button:hover {
+        background-color: #4338ca;
+        transform: translateY(-1px);
+    }
+    
+    .introjs-prevbutton {
+        background-color: #e5e7eb;
+        color: #4b5563;
+    }
+    
+    .introjs-prevbutton:hover {
+        background-color: #d1d5db;
+    }
+    
+    .introjs-skipbutton {
+        color: #6b7280;
+        margin-right: 8px;
+    }
+    
+    .introjs-tooltip-header {
+        padding-bottom: 8px;
+    }
+    
+    .introjs-tooltiptext {
+        padding: 16px;
+        line-height: 1.6;
+    }
+    
+    .introjs-helperLayer {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 2px solid #4f46e5;
+        border-radius: 6px;
+    }
+    
+    .dark .introjs-helperLayer {
+        background-color: rgba(0, 0, 0, 0.1);
+        border: 2px solid #6366f1;
+    }
     </style>
 </head>
 
@@ -54,15 +296,14 @@ require_once __DIR__ . '/../../src/Router.php';
             <div class="container mx-auto px-4 py-3">
                 <div class="flex items-center justify-between">
                     <!-- Logo -->
-                    <div class="flex items-center">
+                    <div class="flex items-center" id="tutorial-step-1">
                         <a href="/" class="flex items-center mr-8">
                             <img src="/images/logo1.png" alt="TrucsPasChers Logo" class="h-11 w-auto" />
-
                         </a>
                     </div>
 
                     <!-- Navigation principale - Desktop -->
-                    <div class="hidden lg:flex flex-1 items-center justify-center">
+                    <div class="hidden lg:flex flex-1 items-center justify-center" id="tutorial-step-2">
                         <div class="relative mx-4">
                             <div class="flex space-x-1">
                                 <?php foreach ($navItems as $path => $label): ?>
@@ -80,7 +321,7 @@ require_once __DIR__ . '/../../src/Router.php';
                     <!-- Partie droite: Recherche + Auth + Mode sombre -->
                     <div class="flex items-center space-x-4">
                         <!-- Barre de recherche -->
-                        <div class="hidden md:block relative" x-data="{ expanded: false }">
+                        <div class="hidden md:block relative" x-data="{ expanded: false }" id="tutorial-step-3">
                             <div class="relative">
                                 <input type="text" placeholder="Rechercher..."
                                     class="py-1.5 pl-8 pr-3 border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 text-sm text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -109,7 +350,7 @@ require_once __DIR__ . '/../../src/Router.php';
                             
                             $nombreArticles = Panier::getNombreArticles();
                         ?>
-                        <a href="/panier" class="relative p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-300 focus:outline-none" aria-label="Panier">
+                        <a href="/panier" class="relative p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-300 focus:outline-none" aria-label="Panier" id="tutorial-step-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
@@ -127,7 +368,7 @@ require_once __DIR__ . '/../../src/Router.php';
                         <!-- Commutateur mode sombre -->
                         <button id="dark-mode-toggle"
                             class="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-300 focus:outline-none"
-                            aria-label="Toggle Dark Mode">
+                            aria-label="Toggle Dark Mode" id="tutorial-step-5">
                             <svg id="dark-mode-icon" class="w-5 h-5 hidden dark:block" fill="currentColor"
                                 viewBox="0 0 20 20">
                                 <path
@@ -142,15 +383,28 @@ require_once __DIR__ . '/../../src/Router.php';
 
                         <!-- Menus utilisateur -->
                         <?php if (isset($isLoggedIn) && $isLoggedIn): ?>
-                        <div class="relative" x-data="{ open: false }">
+                        <div class="relative" x-data="{ open: false }" id="tutorial-step-6-auth">
                             <button @click="open = !open" class="flex items-center focus:outline-none group"
                                 type="button">
                                 <?php 
                                     $avatar = "/public/images/default.png";
-                                    if (isset($userInfo['id'])) {
-                                        $profileImg = "/public/images/profile/{$userInfo['id']}.png";
-                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImg)) {
-                                            $avatar = $profileImg;
+                                    
+                                    // Récupérer les informations de l'étudiant pour obtenir la photo de profil ou l'avatar
+                                    if (isset($_SESSION['user_id'])) {
+                                        try {
+                                            $stmtUser = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
+                                            $stmtUser->execute(['id' => $_SESSION['user_id']]);
+                                            $userObj = $stmtUser->fetchObject(\App\Model\Etudiant::class);
+                                            
+                                            if ($userObj) {
+                                                if ($userObj->getPhotoProfile()) {
+                                                    $avatar = "/public/images/profile/" . $userObj->getPhotoProfile();
+                                                } elseif ($userObj->getAvatar()) {
+                                                    $avatar = "/public/images/profile/avatars/" . $userObj->getAvatar();
+                                                }
+                                            }
+                                        } catch (Exception $e) {
+                                            // En cas d'erreur, utiliser l'avatar par défaut
                                         }
                                     }
                                     ?>
@@ -213,7 +467,7 @@ require_once __DIR__ . '/../../src/Router.php';
                             </div>
                         </div>
                         <?php else: ?>
-                        <div class="flex space-x-2">
+                        <div class="flex space-x-2" id="tutorial-step-6-noauth">
                             <a href="/login"
                                 class="py-2 px-4 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,7 +533,7 @@ require_once __DIR__ . '/../../src/Router.php';
                     <?php if (isset($isLoggedIn) && $isLoggedIn): ?>
                     <div class="pt-2 pb-3 border-t border-gray-200 dark:border-gray-700">
                         <div class="flex items-center px-4 py-2">
-                            <img src="<?= $avatar ?>" alt="Avatar" class="h-10 w-10 rounded-full mr-3">
+                            <img src="<?= $avatar ?>" alt="Avatar" class="h-10 w-10 rounded-full mr-3 object-cover">
                             <div>
                                 <div class="text-base font-medium text-gray-800 dark:text-white">
                                     <?= isset($userInfo['name']) ? htmlspecialchars($userInfo['name']) : 'Utilisateur' ?>
@@ -351,14 +605,15 @@ require_once __DIR__ . '/../../src/Router.php';
         <?= $content ?>
     </main>
 
-    <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12">
+    <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12" id="tutorial-step-7">
         <div class="container mx-auto px-6 py-8">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="flex items-center mb-6 md:mb-0">
                     <img src="/images/logo1.png" alt="TrucsPasChers Logo" class="h-10 w-auto" />
                     <span class="ml-3 text-xl font-bold text-gray-900 dark:text-white">TrucsPasChers</span>
                 </div>
-
+                
+                </div>
                 <div class="flex flex-wrap justify-center md:justify-end gap-6">
                     <div class="w-full md:w-auto mb-6 md:mb-0">
                         <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Liens rapides</h3>
@@ -431,6 +686,8 @@ require_once __DIR__ . '/../../src/Router.php';
         </div>
     </footer>
 
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+    <script src="/js/tutorial.js"></script>
     <script>
     // Fonctionnement du menu mobile
     const btn = document.getElementById('menu-btn');
@@ -466,6 +723,27 @@ require_once __DIR__ . '/../../src/Router.php';
     });
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Bouton de tutoriel en bas à droite avec animation et style amélioré -->
+    <div class="fixed bottom-8 right-8 z-50">
+        <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-full opacity-70 blur-lg animate-pulse"></div>
+        <button id="start-tutorial-btn" 
+            class="relative bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group" 
+            title="Lancer le tutoriel interactif"
+            aria-label="Lancer le tutoriel interactif">
+            <div class="absolute inset-0.5 rounded-full bg-white dark:bg-gray-800 group-hover:opacity-0 transition-opacity duration-300"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                class="h-6 w-6 relative z-10 text-indigo-600 dark:text-indigo-400 group-hover:text-white transition-colors duration-300" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="absolute right-full mr-3 py-1 px-3 bg-white dark:bg-gray-800 rounded-lg text-indigo-600 dark:text-indigo-400 text-sm font-medium shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 -translate-x-3 group-hover:translate-x-0 transition-all duration-300">
+                Tutoriel interactif
+            </span>
+        </button>
+    </div>
 </body>
 
 </html>

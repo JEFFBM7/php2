@@ -112,10 +112,20 @@ if ($produit->getCategori()) {
                     <div class="mb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Vendu par</h3>
                         <div class="flex items-center">
-                            <!-- Vous pouvez ajouter une image de profil du vendeur ici si disponible -->
-                            <span class="text-gray-700 dark:text-gray-300"><?= htmlspecialchars($vendeur->getNom()) ?> <?= htmlspecialchars($vendeur->getPrenom()) ?></span>
+                            <div class="w-12 h-12 rounded-full overflow-hidden mr-3">
+                                <?php if ($vendeur->getPhotoProfile()): ?>
+                                    <img src="/public/images/profile/<?= htmlspecialchars($vendeur->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                <?php elseif ($vendeur->getAvatar()): ?>
+                                    <img src="/public/images/profile/avatars/<?= htmlspecialchars($vendeur->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                    <img src="/public/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                <?php endif; ?>
+                            </div>
+                            <div>
+                                <span class="text-gray-700 dark:text-gray-300 font-medium"><?= htmlspecialchars($vendeur->getNom()) ?></span>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Contact: <?= htmlspecialchars($vendeur->getEmail() ?? $vendeur->getTelephone()) ?></p>
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Contact: <?= htmlspecialchars($vendeur->getEmail()) ?></p>
                     </div>
                     <?php endif; ?>
                     

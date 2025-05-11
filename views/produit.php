@@ -120,10 +120,16 @@ if (empty($categoriesFromDB)) {
                                 <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-20 w-20 rounded-full bg-gradient-to-r from-pink-500/20 via-red-600/20 to-yellow-700/20 blur-lg opacity-50"></div>
                                 <div class="relative z-10">
                                     <!-- Image du produit avec overlay gradué -->
-                                    <div class="relative h-60">
+                                    <div class="relative  h-60">
+                                        
                                         <?php if ($produit->getImage()): ?>
-                                        <img src="/images/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="w-full h-full object-cover" />
+                                            <img
+                                                src="/public/images/produits/<?= htmlspecialchars($produit->getImage()) ?>"
+                                                alt="<?= htmlspecialchars($produit->getNom()) ?>"
+                                                class="block mx-auto h-60 object-cover rounded-lg "
+                                            />
                                         <?php else: ?>
+                                    
                                         <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                             <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -178,7 +184,18 @@ if (empty($categoriesFromDB)) {
                                 </div>
                                 <?php foreach ($etudiants as $etudiant): ?>
                                     <?php if ($etudiant->getId() === $produit->getEtudiantId()): ?>
-                                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Par: <?= htmlspecialchars($etudiant->getNom()) ?></span>
+                                        <div class="flex items-center">
+                                            <div class="w-6 h-6 rounded-full overflow-hidden mr-2">
+                                                <?php if ($etudiant->getPhotoProfile()): ?>
+                                                    <img src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover">
+                                                <?php elseif ($etudiant->getAvatar()): ?>
+                                                    <img src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover">
+                                                <?php else: ?>
+                                                    <img src="/public/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                                <?php endif; ?>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400"><?= htmlspecialchars($etudiant->getNom()) ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
@@ -485,10 +502,10 @@ if (empty($categoriesFromDB)) {
                 }
                 
 
+                // Simplement ajouter un log pour le débogage, mais permettre la navigation normale
                 newLink.addEventListener('click', function(event) {
-                    console.log('Lien "Voir Détails" (dynamique) cliqué. HREF:', this.href);
-                    event.preventDefault(); // Empêche la navigation par défaut
-                    alert('Clic intercepté par JavaScript! La page ne devrait PAS se recharger. Vérifiez la console pour le HREF du lien. Si la page se recharge quand même, le problème est ailleurs.');
+                    console.log('Lien "Voir Détails" (dynamique) cliqué. Navigation vers:', this.href);
+                    // Retirer event.preventDefault() pour permettre la navigation
                 });
             });
         }
