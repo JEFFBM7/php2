@@ -34,15 +34,15 @@ if (!empty($_SESSION['user_id'])) {
                 </span>
                 <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-indigo-500 shadow-md">
                     <?php if (!empty($_SESSION['student']->getPhotoProfile())): ?>
-                        <img src="/public/images/profile/uploads/<?= htmlspecialchars($_SESSION['student']->getPhotoProfile()) ?>" 
+                        <img src="/images/profile/uploads/<?= htmlspecialchars($_SESSION['student']->getPhotoProfile()) ?>" 
                              alt="Photo de profil de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
                              class="w-full h-full object-cover">
                     <?php elseif (!empty($_SESSION['student']->getAvatar())): ?>
-                        <img src="/public/images/profile/avatars/<?= htmlspecialchars($_SESSION['student']->getAvatar()) ?>" 
+                        <img src="/images/profile/avatars/<?= htmlspecialchars($_SESSION['student']->getAvatar()) ?>" 
                              alt="Avatar de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
                              class="w-full h-full object-cover">
                     <?php else: ?>
-                        <img src="/public/images/default.png" 
+                        <img src="/images/default.png" 
                              alt="Avatar par défaut" 
                              class="w-full h-full object-cover">
                     <?php endif; ?>
@@ -81,7 +81,7 @@ if (!empty($_SESSION['user_id'])) {
                     <div class="relative">
                         <div class="absolute -top-4 -left-4 w-72 h-72 bg-blue-100 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
                         <div class="absolute -bottom-8 right-4 w-72 h-72 bg-purple-100 dark:bg-purple-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
-                        <img class="rounded-xl shadow-xl relative z-10" src="/public/images/68188270086b1.png" alt="L'équipe de TrucsPasChers">
+                        <img class="rounded-xl shadow-xl relative z-10" src="/images/68188270086b1.png" alt="L'équipe de TrucsPasChers">
                     </div>
                 </div>
             </div>
@@ -92,10 +92,10 @@ if (!empty($_SESSION['user_id'])) {
             <div class="flex flex-col lg:flex-row items-center gap-12">
                 <div class="lg:w-1/2 mb-8 lg:mb-0">
                     <div class="grid grid-cols-2 gap-4">
-                        <img class="rounded-xl shadow-lg transform -rotate-2" src="/public/images/681b7bbb52f6f.png" alt="Nos produits">
-                        <img class="mt-8 rounded-xl shadow-lg transform rotate-2" src="/public/images/681b7c0ea564e.png" alt="Notre communauté">
-                        <img class="rounded-xl shadow-lg transform rotate-3" src="/public/images/681c78d1abcca.png" alt="Notre service">
-                        <img class="mt-8 rounded-xl shadow-lg transform -rotate-3" src="/public/images/681c637b5c028.png" alt="Nos valeurs">
+                        <img class="rounded-xl shadow-lg transform -rotate-2" src="/images/681b7bbb52f6f.png" alt="Nos produits">
+                        <img class="mt-8 rounded-xl shadow-lg transform rotate-2" src="/images/681b7c0ea564e.png" alt="Notre communauté">
+                        <img class="rounded-xl shadow-lg transform rotate-3" src="/images/681c78d1abcca.png" alt="Notre service">
+                        <img class="mt-8 rounded-xl shadow-lg transform -rotate-3" src="/images/681c637b5c028.png" alt="Nos valeurs">
                     </div>
                 </div>
                 <div class="lg:w-1/2">
@@ -165,7 +165,7 @@ if (!empty($_SESSION['user_id'])) {
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/public/images/681c88ec0c732.png" alt="Sarah Dupont">
+                    <img class="w-full h-56 object-cover object-center" src="/images/681c88ec0c732.png" alt="Sarah Dupont">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sarah Dupont</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Co-fondatrice & CEO</p>
@@ -191,7 +191,7 @@ if (!empty($_SESSION['user_id'])) {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/public/images/681c637b5c028.png" alt="Thomas Martin">
+                    <img class="w-full h-56 object-cover object-center" src="/images/681c637b5c028.png" alt="Thomas Martin">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thomas Martin</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Co-fondateur & CTO</p>
@@ -217,7 +217,7 @@ if (!empty($_SESSION['user_id'])) {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/public/images/681879d740a7c.png" alt="Léa Bernard">
+                    <img class="w-full h-56 object-cover object-center" src="/images/681879d740a7c.png" alt="Léa Bernard">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Léa Bernard</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Directrice Marketing</p>
@@ -243,7 +243,7 @@ if (!empty($_SESSION['user_id'])) {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/public/images/68187a2cbc989.png" alt="Antoine Dubois">
+                    <img class="w-full h-56 object-cover object-center" src="/images/68187a2cbc989.png" alt="Antoine Dubois">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Antoine Dubois</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Responsable des Opérations</p>
@@ -288,7 +288,7 @@ if (!empty($_SESSION['user_id'])) {
                         "En tant qu'étudiant avec un budget limité, TrucsPasChers m'a vraiment sauvé. J'ai pu acheter un ordinateur portable de qualité à un prix abordable qui m'accompagne dans mes études."
                     </p>
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full object-cover" src="/public/images/téléchargement.png" alt="Julien L.">
+                        <img class="h-10 w-10 rounded-full object-cover" src="/images/téléchargement.png" alt="Julien L.">
                         <div class="ml-3">
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Julien L.</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Étudiant en droit</p>
@@ -304,7 +304,7 @@ if (!empty($_SESSION['user_id'])) {
                         "La plateforme est intuitive et je me suis fait un peu d'argent en vendant des livres dont je n'avais plus besoin. Un excellent moyen de donner une seconde vie à nos objets !"
                     </p>
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full object-cover" src="/public/images/apple-watch.jpg" alt="Sophie D.">
+                        <img class="h-10 w-10 rounded-full object-cover" src="/images/apple-watch.jpg" alt="Sophie D.">
                         <div class="ml-3">
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Sophie D.</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Étudiante en informatique</p>
@@ -320,7 +320,7 @@ if (!empty($_SESSION['user_id'])) {
                         "Le service client est réactif et efficace. J'ai eu un petit souci avec ma commande et ils l'ont résolu en moins de 24h. Je recommande vivement TrucsPasChers !"
                     </p>
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full object-cover" src="/public/images/téléchargement (1).jpeg" alt="Marc B.">
+                        <img class="h-10 w-10 rounded-full object-cover" src="/images/téléchargement (1).jpeg" alt="Marc B.">
                         <div class="ml-3">
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Marc B.</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Étudiant en médecine</p>
@@ -331,30 +331,32 @@ if (!empty($_SESSION['user_id'])) {
         </div>
 
         <!-- Appel à l'action -->
-        <div class="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-2xl overflow-hidden shadow-xl">
-            <div class="px-8 py-12 md:py-16 max-w-5xl mx-auto text-center">
-                <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6">
-                    Prêt à rejoindre notre communauté?
-                </h2>
-                <p class="text-blue-100 mb-8 text-lg max-w-2xl mx-auto">
-                    Inscrivez-vous dès aujourd'hui et découvrez des milliers de produits à prix étudiants. Commencez à acheter et vendre en quelques clics!
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="/singup" class="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 font-medium rounded-lg hover:bg-gray-100 transition-colors duration-300">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        S'inscrire
-                    </a>
-                    <a href="/contact" class="inline-flex items-center justify-center px-6 py-3 border border-white text-white font-medium rounded-lg hover:bg-white/10 transition-colors duration-300">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        En savoir plus
-                    </a>
+        <?php if (empty($_SESSION['student'])): ?>
+            <div class="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-2xl overflow-hidden shadow-xl">
+                <div class="px-8 py-12 md:py-16 max-w-5xl mx-auto text-center">
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6">
+                        Prêt à rejoindre notre communauté?
+                    </h2>
+                    <p class="text-blue-100 mb-8 text-lg max-w-2xl mx-auto">
+                        Inscrivez-vous dès aujourd'hui et découvrez des milliers de produits à prix étudiants. Commencez à acheter et vendre en quelques clics!
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href="/signup" class="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 font-medium rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            S'inscrire
+                        </a>
+                        <a href="/contact" class="inline-flex items-center justify-center px-6 py-3 border border-white text-white font-medium rounded-lg hover:bg-white/10 transition-colors duration-300">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            En savoir plus
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 </section>
 

@@ -9,6 +9,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Prevent caching to always clear form fields
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 // Variable pour stocker le succès de connexion
 $loginSuccess = false;
 
@@ -140,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <p class="text-gray-600 dark:text-gray-400">Accédez à votre espace personnel</p>
                             </div>
                             
-                            <form class="space-y-6" action="" method="post">
+                            <form autocomplete="off" class="space-y-6" action="" method="post">
                                 <?php if (isset($error)) : ?>
                                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-red-900/30 dark:text-red-200 flex items-center" role="alert">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

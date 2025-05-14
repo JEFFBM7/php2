@@ -1,84 +1,60 @@
-// Script pour gérer la sélection de l'avatar et le téléchargement de photo
+// Script pour la gestion de photo de profil
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion du mode de sélection (avatar prédéfini ou photo personnalisée)
-    const useAvatarRadio = document.getElementById('use-avatar');
-    const useCustomPhotoRadio = document.getElementById('use-custom-photo');
+    const photoInput = document.getElementById('custom_photo');
+    const photoPreview = document.getElementById('current-photo-preview');
     const avatarsSection = document.getElementById('avatars-section');
     const customPhotoSection = document.getElementById('custom-photo-section');
-    const useCustomPhotoField = document.getElementById('use_custom_photo');
-    
-    if (useAvatarRadio && useCustomPhotoRadio) {
+    const useAvatarRadio = document.getElementById('use-avatar');
+    const useCustomRadio = document.getElementById('use-custom-photo');
+    const hiddenUseCustom = document.getElementById('use_custom_photo');
+
+    // Basculer l’affichage des sections selon la sélection
+    if (useAvatarRadio) {
         useAvatarRadio.addEventListener('change', function() {
-            if (this.checked) {
-                avatarsSection.classList.remove('hidden');
-                customPhotoSection.classList.add('hidden');
-                useCustomPhotoField.value = '0';
-            }
-        });
-        
-        useCustomPhotoRadio.addEventListener('change', function() {
-            if (this.checked) {
-                avatarsSection.classList.add('hidden');
-                customPhotoSection.classList.remove('hidden');
-                useCustomPhotoField.value = '1';
-            }
+            avatarsSection.classList.remove('hidden');
+            customPhotoSection.classList.add('hidden');
+            if (hiddenUseCustom) hiddenUseCustom.value = '0';
         });
     }
-    
-    // Prévisualisation de la photo téléchargée
-    const customPhotoInput = document.getElementById('custom_photo');
-    if (customPhotoInput) {
-        customPhotoInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
+    if (useCustomRadio) {
+        useCustomRadio.addEventListener('change', function() {
+            avatarsSection.classList.add('hidden');
+            customPhotoSection.classList.remove('hidden');
+            if (hiddenUseCustom) hiddenUseCustom.value = '1';
+        });
+    }
+
+    // Aperçu de l’image téléchargée
+    if (photoInput) {
+        photoInput.addEventListener('change', function() {
+            if (this.files && this.files[0] && photoPreview) {
                 const reader = new FileReader();
-                
                 reader.onload = function(e) {
-                    const currentPhotoPreview = document.getElementById('current-photo-preview');
-                    
-                    if (currentPhotoPreview) {
-                        currentPhotoPreview.src = e.target.result;
-                    } else {
-                        // Créer un élément de prévisualisation s'il n'existe pas
-                        const previewContainer = document.querySelector('#custom-photo-section .flex-col');
-                        
-                        if (previewContainer) {
-                            const textElement = document.createElement('div');
-                            textElement.className = 'text-sm text-gray-600 dark:text-gray-400 mb-2';
-                            textElement.textContent = 'Aperçu de votre photo';
-                            
-                            const imageContainer = document.createElement('div');
-                            imageContainer.className = 'w-32 h-32 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden';
-                            
-                            const imageElement = document.createElement('img');
-                            imageElement.src = e.target.result;
-                            imageElement.alt = 'Aperçu de la photo';
-                            imageElement.className = 'w-full h-full object-cover';
-                            imageElement.id = 'current-photo-preview';
-                            
-                            imageContainer.appendChild(imageElement);
-                            previewContainer.appendChild(textElement);
-                            previewContainer.appendChild(imageContainer);
-                        }
-                    }
+                    photoPreview.src = e.target.result;
                 };
-                
                 reader.readAsDataURL(this.files[0]);
             }
         });
     }
-    
-    // Réinitialiser les sélections lors de la soumission du formulaire
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function() {
-            if (useCustomPhotoRadio.checked && !customPhotoInput.files.length) {
-                // Si l'utilisateur veut utiliser une photo personnalisée mais n'en a pas fourni
-                if (!document.getElementById('current-photo-preview')) {
-                    // Et s'il n'y a pas déjà une photo personnalisée
-                    event.preventDefault();
-                    alert('Veuillez sélectionner une photo ou choisir un avatar prédéfini.');
-                }
+
+    // Si le bouton de réinitialisation existe
+    const resetPhotoBtn = document.getElementById('reset-photo');
+    if (resetPhotoBtn) {
+        resetPhotoBtn.addEventListener('click', function() {
+            // Réinitialiser l'input de fichier
+            photoInput.value = '';
+            
+            // Masquer l'aperçu
+            photoPreview.src = '';
+            
+            // Réactiver la section des avatars
+            if (avatarsSection) {
+                avatarsSection.classList.remove('hidden');
             }
+            if (customPhotoSection) {
+                customPhotoSection.classList.add('hidden');
+            }
+            if (hiddenUseCustom) hiddenUseCustom.value = '0';
         });
     }
 });

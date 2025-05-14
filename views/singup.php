@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="relative z-10">
-                            <img src="/public/images/logo1.png" alt="TrucsPasChers" class="h-12 mb-6 mx-auto lg:mx-0">
+                            <img src="/images/logo1.png" alt="TrucsPasChers" class="h-12 mb-6 mx-auto lg:mx-0">
                             
                             <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Rejoignez notre communauté</h2>
                             
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                        class="flex flex-col items-center justify-center p-2 rounded-lg border-2 
                                                               cursor-pointer border-gray-200 dark:border-gray-700 
                                                               peer-checked:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                                    <img src="/public/images/profile/avatars/<?php echo $avatar; ?>" 
+                                                    <img src="/images/profile/avatars/<?php echo $avatar; ?>" 
                                                          alt="Avatar" class="w-16 h-16 mb-1" />
                                                 </label>
                                             </div>
@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="flex flex-col items-center bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
                                         <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Avatar sélectionné</p>
                                         <div class="w-24 h-24 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full p-1">
-                                            <img id="avatar-preview" src="/public/images/profile/avatars/default.svg" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
+                                            <img id="avatar-preview" src="/images/profile/avatars/default.svg" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
                                         </div>
                                     </div>
                                 </div>

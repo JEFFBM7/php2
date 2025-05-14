@@ -39,7 +39,7 @@ if (isset($_GET['action'])) {
         case 'profile_not_found':
             $notification = ['message' => 'Profil introuvable.', 'type' => 'error'];
             break;
-        // Ajoutez d'autres cas pour d'autres actions si nécessaire
+            // Ajoutez d'autres cas pour d'autres actions si nécessaire
     }
 }
 
@@ -55,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $stmtImage = $pdo->prepare('SELECT image FROM produit WHERE id = :product_id');
             $stmtImage->execute([':product_id' => $product_id_to_delete]);
             $image_name = $stmtImage->fetchColumn();
-            if ($image_name && file_exists(__DIR__ . '/../public/images/' . $image_name)) {
-                unlink(__DIR__ . '/../public/images/' . $image_name);
+            if ($image_name && file_exists(__DIR__ . '/../public/images/produits/' . $image_name)) {
+                unlink(__DIR__ . '/../public/images/produits/' . $image_name);
             }
 
             $stmtDelete = $pdo->prepare('DELETE FROM produit WHERE id = :product_id');
@@ -84,27 +84,38 @@ $stmt2 = $pdo->prepare('SELECT * FROM produit WHERE etudiant_id = :id');
 $stmt2->execute(['id' => $id]);
 $produits = $stmt2->fetchAll(PDO::FETCH_CLASS, Produit::class);
 
+// Définir l'onglet actif
+$tab = $_GET['tab'] ?? 'produits';
+
+// Récupérer les commandes de l'utilisateur
+$stmt3 = $pdo->prepare('SELECT * FROM commande WHERE etudiant_id = :id ORDER BY id DESC');
+$stmt3->execute(['id' => $id]);
+$commandes = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
+// Initialiser la liste des favoris (à adapter selon schéma)
+$favoris = []; // Exemple : récupérer les favoris depuis votre table Favoris
+
 // Détermination de la photo de profil
-$profileImg = '/public/images/profile/' . $etudiant->getId() . '.png';
+$profileImg = '/images/profile/' . $etudiant->getId() . '.png';
 if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
-    $profileImg = '/public/images/default.png';
+    $profileImg = '/images/default.png';
 }
 ?>
 
 <!-- Section de Notification -->
 <?php if ($notification): ?>
-<section class="container mx-auto px-4 mt-4">
-    <div class="p-4 rounded-lg <?= $notification['type'] === 'success' ? 'bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-200' : 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-200' ?> flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <?php if ($notification['type'] === 'success'): ?>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            <?php else: ?>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            <?php endif; ?>
-        </svg>
-        <?= htmlspecialchars($notification['message']) ?>
-    </div>
-</section>
+    <section class="container mx-auto px-4 mt-4">
+        <div class="p-4 rounded-lg <?= $notification['type'] === 'success' ? 'bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-200' : 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-200' ?> flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <?php if ($notification['type'] === 'success'): ?>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <?php else: ?>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <?php endif; ?>
+            </svg>
+            <?= htmlspecialchars($notification['message']) ?>
+        </div>
+    </section>
 <?php endif; ?>
 
 <!-- Bannière de l'utilisateur -->
@@ -125,24 +136,21 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                     <?php if ($etudiant->getPhotoProfile()): ?>
                         <!-- Si la photo est un chemin de fichier -->
                         <img
-                            src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>"
+                            src="/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>"
                             alt="Photo de profil de <?= htmlspecialchars($etudiant->getNom()) ?>"
-                            class="w-full h-full object-cover" 
-                        />
+                            class="w-full h-full object-cover" />
                     <?php elseif ($etudiant->getAvatar()): ?>
                         <!-- Si l'utilisateur a un avatar prédéfini -->
                         <img
-                            src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>"
+                            src="/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>"
                             alt="Avatar de <?= htmlspecialchars($etudiant->getNom()) ?>"
-                            class="w-full h-full object-cover" 
-                        />
+                            class="w-full h-full object-cover" />
                     <?php else: ?>
                         <!-- Image par défaut si aucune photo en BDD -->
                         <img
-                            src="/public/images/default.png"
+                            src="/images/default.png"
                             alt="Photo de profil par défaut"
-                            class="w-full h-full object-cover" 
-                        />
+                            class="w-full h-full object-cover" />
                     <?php endif; ?>
                 </div>
             </div>
@@ -254,7 +262,7 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                                 <!-- Image du produit -->
                                 <div class="relative h-60">
                                     <?php if ($produit->getImage()): ?>
-                                        <img src="/images/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="w-full h-full object-cover" />
+                                        <img src="/images/produits/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="block mx-auto h-60 object-cover rounded-lg " />
                                     <?php else: ?>
                                         <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                             <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

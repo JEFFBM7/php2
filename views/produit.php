@@ -124,7 +124,7 @@ if (empty($categoriesFromDB)) {
                                         
                                         <?php if ($produit->getImage()): ?>
                                             <img
-                                                src="/public/images/produits/<?= htmlspecialchars($produit->getImage()) ?>"
+                                                src="/images/produits/<?= htmlspecialchars($produit->getImage()) ?>"
                                                 alt="<?= htmlspecialchars($produit->getNom()) ?>"
                                                 class="block mx-auto h-60 object-cover rounded-lg "
                                             />
@@ -187,11 +187,11 @@ if (empty($categoriesFromDB)) {
                                         <div class="flex items-center">
                                             <div class="w-6 h-6 rounded-full overflow-hidden mr-2">
                                                 <?php if ($etudiant->getPhotoProfile()): ?>
-                                                    <img src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover">
+                                                    <img src="/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover">
                                                 <?php elseif ($etudiant->getAvatar()): ?>
-                                                    <img src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover">
+                                                    <img src="/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($etudiant->getNom()) ?>" class="w-full h-full object-cover">
                                                 <?php else: ?>
-                                                    <img src="/public/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                                    <img src="/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
                                                 <?php endif; ?>
                                             </div>
                                             <span class="text-sm font-medium text-gray-600 dark:text-gray-400"><?= htmlspecialchars($etudiant->getNom()) ?></span>

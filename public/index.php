@@ -1,4 +1,29 @@
 <?php
+// Servir les fichiers statiques existants dans /public
+$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+// Gérer la requête du favicon pour éviter la 404
+if ($uri === '/favicon.ico') {
+    header('Content-Type: image/png');
+    readfile(__DIR__ . '/images/logo1.png');
+    exit;
+}
+
+// Fichier cible
+$file = __DIR__ . $uri;
+if ($uri !== '/' && file_exists($file) && is_file($file)) {
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    if ($ext === 'php') {
+        // Exécuter directement les scripts PHP présents dans /public
+        require $file;
+        exit;
+    }
+    // Fichiers statiques (images, CSS, JS, etc.)
+    $mime = mime_content_type($file) ?: 'application/octet-stream';
+    header('Content-Type: ' . $mime);
+    readfile($file);
+    exit;
+}
 
 use Whoops\Run as WhoopsRun;
 use Whoops\Handler\PrettyPageHandler;
@@ -41,5 +66,7 @@ $router
        ->get('/fix-tutorial', 'fix_tutorial', 'fix_tutorial')     // Page de correctif pour le tutoriel
        ->get('/tutorial-documentation', 'tutorial_documentation', 'tutorial_documentation')  // Documentation du tutoriel
        ->get('/js/tutorial.js', 'js-proxy', 'js_proxy')  // Route spéciale pour rediriger tutorial.js
+       ->get('/url-debug', function() { include __DIR__ . '/url-debug.php'; }, 'url_debug')  // Route temporaire pour diagnostiquer les problèmes d'URL
+       ->get('/produit-debug/[i:id]', function($id) { include __DIR__ . '/produit-debug.php'; }, 'produit_debug')  // Route temporaire pour diagnostiquer les problèmes de détails produit
      
        ->run();

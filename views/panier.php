@@ -129,7 +129,7 @@ if (isset($_GET['action'])) {
                                     <!-- Image du produit -->
                                     <div class="sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
                                         <?php if ($item['image']): ?>
-                                            <img src="/images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['nom']) ?>" class="w-full h-full object-cover" />
+                                            <img src="/images/produits/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['nom']) ?>" class="w-full h-full object-cover" />
                                         <?php else: ?>
                                             <div class="w-full h-full flex items-center justify-center">
                                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,11 +150,11 @@ if (isset($_GET['action'])) {
                                                 <div class="w-5 h-5 rounded-full overflow-hidden mr-2">
                                                     <?php $vendeur = $vendeurs[$item['vendeur_id']]; ?>
                                                     <?php if ($vendeur->getPhotoProfile()): ?>
-                                                        <img src="/public/images/profile/<?= htmlspecialchars($vendeur->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                                        <img src="/images/profile/<?= htmlspecialchars($vendeur->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
                                                     <?php elseif ($vendeur->getAvatar()): ?>
-                                                        <img src="/public/images/profile/avatars/<?= htmlspecialchars($vendeur->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                                        <img src="/images/profile/avatars/<?= htmlspecialchars($vendeur->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
                                                     <?php else: ?>
-                                                        <img src="/public/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                                        <img src="/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
                                                     <?php endif; ?>
                                                 </div>
                                                 <span class="text-xs text-gray-600 dark:text-gray-400">Vendeur: <?= htmlspecialchars($vendeur->getNom()) ?></span>

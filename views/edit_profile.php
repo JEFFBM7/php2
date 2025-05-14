@@ -183,11 +183,11 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                             <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-full opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
                             <div class="relative w-24 h-24 rounded-full overflow-hidden shadow-lg">
                                 <?php if($etudiant->getPhotoProfile()): ?>
-                                    <img src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                                    <img src="/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo de profil" class="w-full h-full object-cover">
                                 <?php elseif($etudiant->getAvatar()): ?>
-                                    <img src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>" alt="Avatar" class="w-full h-full object-cover">
+                                    <img src="/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>" alt="Avatar" class="w-full h-full object-cover">
                                 <?php else: ?>
-                                    <img src="/public/images/profile/avatars/default.svg" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                    <img src="/images/profile/avatars/default.svg" alt="Avatar par défaut" class="w-full h-full object-cover">
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -248,7 +248,7 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                             </div>
                             
                             <!-- Section avatars prédéfinis -->
-                            <div id="avatars-section" class="<?php echo ($etudiant->getPhotoProfile()) ? 'hidden' : ''; ?>">
+                            <div id="avatars-section" class="<?php echo ($etudiant->getPhotoProfile()) ? 'hidden' : ''; ?> avatar-selection-section">
                                 <div class="flex flex-col md:flex-row gap-6">
                                     <div class="grid grid-cols-3 sm:grid-cols-4 gap-4 flex-1">
                                         <?php foreach ($avatars as $avatar): ?>
@@ -260,7 +260,7 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                                                     class="flex flex-col items-center justify-center p-2 rounded-lg border-2 
                                                         cursor-pointer border-gray-200 dark:border-gray-700 
                                                         peer-checked:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                                    <img src="/public/images/profile/avatars/<?php echo $avatar; ?>" 
+                                                    <img src="/images/profile/avatars/<?php echo $avatar; ?>" 
                                                         alt="Avatar" class="w-16 h-16 mb-1" />
                                                 </label>
                                             </div>
@@ -270,14 +270,14 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                                     <div class="flex flex-col items-center bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
                                         <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Avatar sélectionné</p>
                                         <div class="w-24 h-24 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full p-1">
-                                            <img id="avatar-preview" src="/public/images/profile/avatars/<?= $etudiant->getAvatar() ?: 'default.svg' ?>" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
+                                            <img id="avatar-preview" src="/images/profile/avatars/<?= $etudiant->getAvatar() ?: 'default.svg' ?>" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Section téléchargement de photo -->
-                            <div id="custom-photo-section" class="<?php echo (!$etudiant->getPhotoProfile()) ? 'hidden' : ''; ?>">
+                            <div id="custom-photo-section" class="<?php echo (!$etudiant->getPhotoProfile()) ? 'hidden' : ''; ?> photo-upload-section">
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="custom_photo">
                                         Télécharger votre photo
@@ -301,7 +301,7 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                                     <?php if($etudiant->getPhotoProfile()): ?>
                                         <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Photo actuelle</div>
                                         <div class="w-32 h-32 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                                            <img src="/public/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo actuelle" class="w-full h-full object-cover" id="current-photo-preview">
+                                            <img src="/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>" alt="Photo actuelle" class="w-full h-full object-cover" id="current-photo-preview">
                                         </div>
                                     <?php endif; ?>
                                 </div>

@@ -79,8 +79,21 @@ class Router {
         // Débogage: afficher l'URL actuelle et les données de session
         $currentUrl = $_SERVER['REQUEST_URI'];
         
-        // Nettoyer l'URL pour retirer les éventuels /public/index.php/ du début
-        $currentUrl = preg_replace('#^/public/index\.php#', '', $currentUrl);
+        // Nettoyer l'URL pour retirer les éventuels /public/index.php/ du début et les slashes supplémentaires
+        $currentUrl = preg_replace('#^/public/index\.php/?#', '/', $currentUrl);
+        
+        // Vérifier si l'URL contient '/index.php' sans 'public/' au début
+        if (strpos($currentUrl, '/index.php') === 0) {
+            $currentUrl = preg_replace('#^/index\.php/?#', '/', $currentUrl);
+        }
+        
+        // Éviter les doubles slashes
+        $currentUrl = preg_replace('#/+#', '/', $currentUrl);
+        
+        // S'assurer que l'URL commence par /
+        if (empty($currentUrl) || $currentUrl[0] !== '/') {
+            $currentUrl = '/' . $currentUrl;
+        }
         
         error_log("URL nettoyée: " . $currentUrl);
         error_log("Session ID: " . session_id());
@@ -106,6 +119,10 @@ class Router {
                 error_log("Le fichier de vue existe bien");
                 // Démarrage du buffer de sortie
                 ob_start();
+                
+                // Extraire les paramètres pour les rendre disponibles dans la vue
+                $params = $match['params'] ?? [];
+                error_log("Paramètres transmis à la vue: " . json_encode($params));
                 
                 // Inclusion du fichier de vue
                 include_once $viewFile;
@@ -178,11 +195,7 @@ class Router {
         ];
         
         // Ajouter les liens de connexion et d'inscription uniquement si l'utilisateur n'est pas connecté
-        if (!$isLoggedIn) {
-            $navItems['/login'] = 'Connexion';
-            $navItems['/singup'] = 'Inscription';
-        }
-        
+    
         $currentPath = $_SERVER['REQUEST_URI'];
         
         // Inclusion du layout avec le contenu 404

@@ -1,10 +1,20 @@
 RewriteEngine On
 
-# Redirection spécifique pour les fichiers du dossier js
-RewriteRule ^js/(.*)$ assets/js/$1 [L]
+# Redirection pour les fichiers JS (essayer d'abord public puis assets)
+RewriteCond %{REQUEST_URI} ^/js/(.*)$
+RewriteCond %{DOCUMENT_ROOT}/public/js/$1 -f
+RewriteRule ^js/(.*)$ /public/js/$1 [L]
 
-# Redirection des images vers le bon dossier
-RewriteRule ^images/(.*)$ public/images/produits/$1 [L]
+RewriteCond %{REQUEST_URI} ^/js/(.*)$
+RewriteRule ^js/(.*)$ /assets/js/$1 [L]
+
+# Redirection pour les images (essayer d'abord public puis assets)
+RewriteCond %{REQUEST_URI} ^/images/(.*)$
+RewriteCond %{DOCUMENT_ROOT}/public/images/$1 -f
+RewriteRule ^images/(.*)$ /public/images/$1 [L]
+
+RewriteCond %{REQUEST_URI} ^/images/(.*)$
+RewriteRule ^images/(.*)$ /public/images/produits/$1 [L]
 
 # Permettre l'accès direct aux répertoires et fichiers existants
 RewriteCond %{REQUEST_FILENAME} -f
@@ -14,4 +24,5 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 # Si le fichier ou le répertoire n'existe pas, rediriger vers index.php
-RewriteRule ^(.*)$ public/index.php/$1 [L,QSA]
+# Correction: Suppression de la partie public/index.php/ de l'URL pour que le routage fonctionne correctement
+RewriteRule ^(.*)$ public/index.php [L,QSA]

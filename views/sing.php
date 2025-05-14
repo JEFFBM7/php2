@@ -138,4 +138,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </section>
 
-<script src="/js/avatar-selector.js"></script>
+<script src="/public/js/avatar-selector.js"></script>

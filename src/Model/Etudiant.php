@@ -38,4 +38,9 @@ class  Etudiant {
     public function getPhotoProfile() {
         return $this->photo_profile;
     }
+    
+    public function getEmail() {
+        // La colonne dans la base de données s'appelle emailetudiant
+        return $this->emailetudiant ?? '';
+    }
 }

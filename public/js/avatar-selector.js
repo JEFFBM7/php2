@@ -1,27 +1,32 @@
-// Script pour améliorer la sélection d'avatar
+// Script pour la sélection d'avatar
 document.addEventListener('DOMContentLoaded', function() {
-  const avatarOptions = document.querySelectorAll('.avatar-option input');
-  
-  avatarOptions.forEach(option => {
-    option.addEventListener('change', function() {
-      // Animation lorsqu'un avatar est sélectionné
-      const selectedLabel = this.nextElementSibling;
-      selectedLabel.classList.add('animate-bounce');
-      setTimeout(() => {
-        selectedLabel.classList.remove('animate-bounce');
-      }, 500);
-      
-      // Mettre à jour la prévisualisation de l'avatar sélectionné
-      const previewImg = document.getElementById('avatar-preview');
-      if (previewImg) {
-        previewImg.src = `/public/images/profile/avatars/${this.value}`;
-        
-        // Animation de l'aperçu
-        previewImg.classList.add('animate-pulse');
-        setTimeout(() => {
-          previewImg.classList.remove('animate-pulse');
-        }, 1000);
-      }
+    // Sélectionner tous les avatars
+    const avatars = document.querySelectorAll('.avatar-option');
+    const avatarInput = document.getElementById('avatar');
+    
+    // Ajouter un gestionnaire d'événements à chaque avatar
+    avatars.forEach(avatar => {
+        avatar.addEventListener('click', function() {
+            // Retirer la classe active de tous les avatars
+            avatars.forEach(a => a.classList.remove('active'));
+            
+            // Ajouter la classe active à l'avatar sélectionné
+            this.classList.add('active');
+            
+            // Mettre à jour la valeur du champ caché
+            avatarInput.value = this.dataset.avatar;
+            
+            // Si un avatar est sélectionné, désactiver l'option de téléchargement de photo de profil
+            const photoProfileInput = document.getElementById('photo_profile');
+            if (photoProfileInput) {
+                photoProfileInput.value = '';
+                
+                // Désactiver visuellement la section de téléchargement de photo
+                const photoSection = document.querySelector('.photo-upload-section');
+                if (photoSection) {
+                    photoSection.classList.add('opacity-50');
+                }
+            }
+        });
     });
-  });
 });

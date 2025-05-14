@@ -1,9 +1,0 @@
-RewriteEngine On
-
-# Redirection spécifique pour tutorial.js
-RewriteRule ^js/tutorial\.js$ /assets/js/tutorial.js [L]
-
-# Rediriger le dossier public vers l'index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [L,QSA]

@@ -19,7 +19,7 @@ $title = 'Page non trouvée';
                 </a>
             </div>
             <div class="mt-12">
-                <img src="/public/images/logo1.png" alt="TrucsPasChers Logo" class="h-20 mx-auto opacity-50" />
+                <img src="/images/logo1.png" alt="TrucsPasChers Logo" class="h-20 mx-auto opacity-50" />
             </div>
         </div>
     </div>

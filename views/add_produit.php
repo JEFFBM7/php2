@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $filename = uniqid() . '.' . $ext;
-        $destination = __DIR__ . '/../public/images/' . $filename;
+        $destination = __DIR__ . '/../public/images/produits/' . $filename;
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
             $imagePath = $filename;

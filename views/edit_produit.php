@@ -51,13 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Gestion de l'upload d'une nouvelle image
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         // Supprimer l'ancienne image si elle existe et si une nouvelle est uploadée
-        if ($imagePath && file_exists(__DIR__ . '/../public/images/' . $imagePath)) {
-            unlink(__DIR__ . '/../public/images/' . $imagePath);
+        if ($imagePath && file_exists(__DIR__ . '/../public/images/produits/' . $imagePath)) {
+            unlink(__DIR__ . '/../public/images/produits/' . $imagePath);
         }
 
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $filename = uniqid() . '.' . $ext;
-        $destination = __DIR__ . '/../public/images/' . $filename;
+        $destination = __DIR__ . '/../public/images/produits/' . $filename;
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
             $imagePath = $filename;
@@ -135,7 +135,7 @@ $categories = ['Électronique', 'Audio', 'Téléphonie', 'Tablettes', 'Accessoir
                         <div class="mb-6">
                             <div class="flex justify-center mb-4">
                                 <div class="w-full h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 relative overflow-hidden" id="image-preview-container">
-                                    <img id="image-preview" class="absolute inset-0 w-full h-full object-contain <?= $produit->getImage() ? '' : 'hidden' ?>" src="<?= $produit->getImage() ? '/images/' . htmlspecialchars($produit->getImage()) : '' ?>" alt="Prévisualisation">
+                                    <img id="image-preview" class="absolute inset-0 w-full h-full object-contain <?= $produit->getImage() ? '' : 'hidden' ?>" src="<?= $produit->getImage() ? '/public/images/produits/' . htmlspecialchars($produit->getImage()) : '' ?>" alt="Prévisualisation">
                                     <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mb-2 <?= $produit->getImage() ? 'hidden' : '' ?>" id="default-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
