@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Connexion à la base de données
 $pdo = Connection::getInstance();
-
+ 
 // Récupérer les informations de l'étudiant connecté si disponible
 $etudiant = null;
 if (!empty($_SESSION['user_id'])) {
