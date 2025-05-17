@@ -1,4 +1,13 @@
 <?php
+// Si l'accès se fait directement, charger la configuration
+if (!defined('APP_ROOT')) {
+    // Charger l'autoloader de Composer
+    require_once __DIR__ . '/../vendor/autoload.php';
+    
+    // Charger la configuration centralisée
+    require_once __DIR__ . '/../config.php';
+}
+
 // Servir les fichiers statiques existants dans /public
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
@@ -39,6 +48,7 @@ $router = new Router(__DIR__ . '/../views');
 
 $router
        ->get('/',            'index',        'home')
+       ->post('/',           'index',        'home_post')
        ->get('/about',       'about',        'about')
        ->get('/contact',     'contact',      'contact')
        ->get('/produit',     'produit',      'produit')
@@ -58,15 +68,6 @@ $router
        ->get('/edit_profile', 'edit_profile', 'edit_profile')       // Route GET pour afficher le formulaire de modification du profil 
        ->post('/edit_profile','edit_profile', 'edit_profile_post')  // Route POST pour traiter la modification du profil
        ->get('/panier',      'panier',       'panier')              // Nouvelle route pour le panier
-       ->get('/adminer',     'adminer',      'adminer')
-       ->get('/admin-tutorial', 'admin_tutorial', 'admin_tutorial')  // Route pour l'administration du tutoriel
-       ->get('/tutorial-api', 'tutorial-api', 'tutorial_api')     // API pour récupérer les étapes du tutoriel
-       ->post('/save-tutorial-preference', 'save-tutorial-preference', 'save_tutorial_preference')  // API pour sauvegarder les préférences de tutoriel
-       ->get('/debug-tutorial', 'debug-tutorial', 'debug_tutorial')  // Page de débogage pour le tutoriel
-       ->get('/fix-tutorial', 'fix_tutorial', 'fix_tutorial')     // Page de correctif pour le tutoriel
-       ->get('/tutorial-documentation', 'tutorial_documentation', 'tutorial_documentation')  // Documentation du tutoriel
-       ->get('/js/tutorial.js', 'js-proxy', 'js_proxy')  // Route spéciale pour rediriger tutorial.js
-       ->get('/url-debug', function() { include __DIR__ . '/url-debug.php'; }, 'url_debug')  // Route temporaire pour diagnostiquer les problèmes d'URL
-       ->get('/produit-debug/[i:id]', function($id) { include __DIR__ . '/produit-debug.php'; }, 'produit_debug')  // Route temporaire pour diagnostiquer les problèmes de détails produit
-     
+       ->get('/adminer',     'adminer',      'adminer')     // Route pour Adminer
+       ->post('/panier', 'panier', 'panier_post')
        ->run();

@@ -4,6 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Model\Etudiant;
 use App\Model\Produit;
+use App\Model\Connection;
 
 // Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
 if (session_status() === PHP_SESSION_NONE) {
@@ -15,9 +16,7 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = Connection::getInstance();
 $id = $_SESSION['user_id'];
 
 // Gestion des messages de notification
@@ -96,9 +95,9 @@ $commandes = $stmt3->fetchAll(PDO::FETCH_ASSOC);
 $favoris = []; // Exemple : récupérer les favoris depuis votre table Favoris
 
 // Détermination de la photo de profil
-$profileImg = '/images/profile/' . $etudiant->getId() . '.png';
+$profileImg = '/public/images/profile/' . $etudiant->getId() . '.png';
 if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
-    $profileImg = '/images/default.png';
+    $profileImg = '/public/images/default.png';
 }
 ?>
 
@@ -128,27 +127,26 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
             </svg>
         </div>
 
-        <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
-            <!-- Photo de profil avec cercle animé -->
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8"> <!-- Photo de profil avec cercle animé -->
             <div class="relative group">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-full opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
                 <div class="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden shadow-xl">
                     <?php if ($etudiant->getPhotoProfile()): ?>
                         <!-- Si la photo est un chemin de fichier -->
                         <img
-                            src="/images/profile/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>"
+                            src="/public/images/profile/uploads/<?= htmlspecialchars($etudiant->getPhotoProfile()) ?>"
                             alt="Photo de profil de <?= htmlspecialchars($etudiant->getNom()) ?>"
                             class="w-full h-full object-cover" />
                     <?php elseif ($etudiant->getAvatar()): ?>
                         <!-- Si l'utilisateur a un avatar prédéfini -->
                         <img
-                            src="/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>"
+                            src="/public/images/profile/avatars/<?= htmlspecialchars($etudiant->getAvatar()) ?>"
                             alt="Avatar de <?= htmlspecialchars($etudiant->getNom()) ?>"
                             class="w-full h-full object-cover" />
                     <?php else: ?>
                         <!-- Image par défaut si aucune photo en BDD -->
                         <img
-                            src="/images/default.png"
+                            src="/public/images/default.png"
                             alt="Photo de profil par défaut"
                             class="w-full h-full object-cover" />
                     <?php endif; ?>
@@ -262,7 +260,7 @@ if (!file_exists(__DIR__ . '/../public' . $profileImg)) {
                                 <!-- Image du produit -->
                                 <div class="relative h-60">
                                     <?php if ($produit->getImage()): ?>
-                                        <img src="/images/produits/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="block mx-auto h-60 object-cover rounded-lg " />
+                                        <img src="/public/images/produits/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="block mx-auto h-60 object-cover rounded-lg " />
                                     <?php else: ?>
                                         <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                             <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

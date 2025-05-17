@@ -1,10 +1,16 @@
 <?php
 namespace App;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Pas besoin de require l'autoloader ici, il est déjà chargé dans le fichier d'entrée
+// require_once __DIR__ . '/../vendor/autoload.php';
 
 use AltoRouter;
 use PDO;
+use App\Model\Connection;
+use App\Util\Logger;
+use App\Util\Security;
+use Whoops\Run as WhoopsRun;
+use Whoops\Handler\PrettyPageHandler;
 
 class Router {
     private $router;
@@ -16,7 +22,19 @@ class Router {
         $this->router->setBasePath('');
         $this->viewsPath = $viewsPath;
         
-        // La route pour les détails du produit est maintenant définie dans index.php
+        // Initialiser le gestionnaire d'erreurs en mode développement
+        if (defined('DEBUG_MODE') && DEBUG_MODE === true) {
+            $this->initErrorHandler();
+        }
+    }
+    
+    /**
+     * Initialise le gestionnaire d'erreurs Whoops
+     */
+    private function initErrorHandler() {
+        $whoops = new WhoopsRun();
+        $whoops->pushHandler(new PrettyPageHandler());
+        $whoops->register();
     }
 
     /**
@@ -42,40 +60,42 @@ class Router {
         $this->handleRequest();
     }
 
-    // Obtenir l'ID de l'utilisateur connecté s'il existe
+    /**
+     * Obtenir l'ID de l'utilisateur connecté s'il existe
+     * @return int|null ID de l'utilisateur ou null
+     */
     private function getUserId() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        return $_SESSION['user_id'] ?? null;
+        $security = Security::getInstance();
+        return $security->getCurrentUserId();
     }
 
-    // Vérifier si l'utilisateur est connecté
+    /**
+     * Vérifier si l'utilisateur est connecté
+     * @return bool True si l'utilisateur est connecté
+     */
     private function isLoggedIn() {
-        return $this->getUserId() !== null;
+        $security = Security::getInstance();
+        return $security->isLoggedIn();
     }
 
-    // Obtenir les informations de l'utilisateur connecté
+    /**
+     * Obtenir les informations de l'utilisateur connecté
+     * @return array|null Informations de l'utilisateur ou null
+     */
     private function getUserInfo() {
-        if (!$this->isLoggedIn()) {
-            return null;
-        }
-
-        try {
-            $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]);
-
-            $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
-            $stmt->execute(['id' => $this->getUserId()]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
-            error_log("Erreur PDO dans getUserInfo: " . $e->getMessage());
-            return null;
-        }
+        $security = Security::getInstance();
+        return $security->getCurrentUser();
     }
 
     public function handleRequest() {
+        // Démarrer ou récupérer la session si elle n'est pas déjà active
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Initialiser le logger
+        $logger = Logger::getInstance();
+
         // Débogage: afficher l'URL actuelle et les données de session
         $currentUrl = $_SERVER['REQUEST_URI'];
         
@@ -95,9 +115,10 @@ class Router {
             $currentUrl = '/' . $currentUrl;
         }
         
-        error_log("URL nettoyée: " . $currentUrl);
-        error_log("Session ID: " . session_id());
-        error_log("Session user_id: " . ($this->getUserId() ?? 'non connecté'));
+        // Log avec notre classe Logger
+        $logger->debug("URL nettoyée: " . $currentUrl);
+        $logger->debug("Session ID: " . session_id());
+        $logger->debug("Session user_id: " . ($this->getUserId() ?? 'non connecté'));
         
         // Réinitialiser l'URL actuelle pour le routeur
         $_SERVER['REQUEST_URI'] = $currentUrl;
@@ -105,24 +126,32 @@ class Router {
         // Force le routeur à faire la correspondance
         $match = $this->router->match();
         
-        error_log("Match trouvé: " . ($match ? 'oui' : 'non'));
+        $logger = Logger::getInstance();
+        $logger->debug("Match trouvé: " . ($match ? 'oui' : 'non'));
         if ($match) {
-            error_log("Vue cible: " . $match['target']);
+            $logger->debug("Vue cible: " . (is_string($match['target']) ? $match['target'] : 'Closure'));
         }
 
         if ($match) {
+            // Si le target est un closure, l'exécuter directement
+            if (is_callable($match['target']) && !is_string($match['target'])) {
+                return call_user_func_array($match['target'], $match['params']);
+            }
+            
             $view = $match['target'];
             $viewFile = $this->viewsPath . DIRECTORY_SEPARATOR . $view . '.php';
-            error_log("Tentative de chargement du fichier: " . $viewFile);
+            
+            $logger = Logger::getInstance();
+            $logger->debug("Tentative de chargement du fichier: " . $viewFile);
             
             if (file_exists($viewFile)) {
-                error_log("Le fichier de vue existe bien");
+                $logger->debug("Le fichier de vue existe bien");
                 // Démarrage du buffer de sortie
                 ob_start();
                 
                 // Extraire les paramètres pour les rendre disponibles dans la vue
                 $params = $match['params'] ?? [];
-                error_log("Paramètres transmis à la vue: " . json_encode($params));
+                $logger->debug("Paramètres transmis à la vue: " . json_encode($params));
                 
                 // Inclusion du fichier de vue
                 include_once $viewFile;
@@ -133,7 +162,7 @@ class Router {
                 // Vérifier si l'utilisateur est connecté
                 $isLoggedIn = $this->isLoggedIn();
                 $userInfo = $isLoggedIn ? $this->getUserInfo() : null;
-                error_log("Utilisateur connecté: " . ($isLoggedIn ? 'oui' : 'non'));
+                $logger->debug("Utilisateur connecté: " . ($isLoggedIn ? 'oui' : 'non'));
                 
                 // Définit les éléments de navigation
                 $navItems = [
@@ -155,11 +184,13 @@ class Router {
                 // Inclusion du layout avec le contenu
                 include_once $this->viewsPath . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . 'dafault.php';
             } else {
-                error_log("Erreur: Fichier de vue non trouvé: " . $viewFile);
+                $logger = Logger::getInstance();
+                $logger->error("Erreur: Fichier de vue non trouvé: " . $viewFile);
                 $this->show404();
             }
         } else {
-            error_log("Aucune route correspondante trouvée pour: " . $currentUrl);
+            $logger = Logger::getInstance();
+            $logger->warning("Aucune route correspondante trouvée pour: " . $currentUrl);
             $this->show404();
         }
     }

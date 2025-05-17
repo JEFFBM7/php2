@@ -1,0 +1,37 @@
+# Fichiers et dossiers généraux à ignorer
+.env
+vendor/
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Fichiers de configuration spécifiques à l'IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Fichiers temporaires
+*.cache
+*.bak
+*.tmp
+*.swp
+*~
+
+# Fichiers de log
+logs/*
+!logs/.gitkeep
+
+# Dossiers de contenu téléchargé
+public/images/produits/*
+!public/images/produits/.gitkeep
+public/images/profile/uploads/*
+!public/images/profile/uploads/.gitkeep
+public/images/profile/avatars/*
+!public/images/profile/avatars/.gitkeep
+
+# Fichiers de cache et de configuration PHP
+*.php~
+
+# Fichiers de configuration de composer
+composer.phar

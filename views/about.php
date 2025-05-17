@@ -1,7 +1,9 @@
 <?php
 $title = 'À propos - TrucsPasChers';
 require_once __DIR__ . '/../vendor/autoload.php';
+
 use App\Model\Etudiant;
+use App\Model\Connection;
 
 // Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
 if (session_status() === PHP_SESSION_NONE) {
@@ -11,13 +13,11 @@ if (session_status() === PHP_SESSION_NONE) {
 // Récupérer les informations de l'étudiant connecté si disponible
 $etudiant = null;
 if (!empty($_SESSION['user_id'])) {
-    $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    $pdo = Connection::getInstance();
     $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
     $stmt->execute([':id' => $_SESSION['user_id']]);
     $etudiant = $stmt->fetchObject(Etudiant::class);
-    
+
     // Stocker l'objet étudiant dans la session pour y accéder facilement
     $_SESSION['student'] = $etudiant;
 }
@@ -27,30 +27,30 @@ if (!empty($_SESSION['user_id'])) {
     <div class="container mx-auto px-6 lg:px-8">
         <!-- Affichage de la photo de profil de l'utilisateur connecté -->
         <?php if (!empty($_SESSION['student'])): ?>
-        <div class="flex items-center justify-end mb-4">
-            <div class="flex items-center space-x-3">
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Bonjour, <?= htmlspecialchars($_SESSION['student']->getNom()) ?>
-                </span>
-                <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-indigo-500 shadow-md">
-                    <?php if (!empty($_SESSION['student']->getPhotoProfile())): ?>
-                        <img src="/images/profile/uploads/<?= htmlspecialchars($_SESSION['student']->getPhotoProfile()) ?>" 
-                             alt="Photo de profil de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
-                             class="w-full h-full object-cover">
-                    <?php elseif (!empty($_SESSION['student']->getAvatar())): ?>
-                        <img src="/images/profile/avatars/<?= htmlspecialchars($_SESSION['student']->getAvatar()) ?>" 
-                             alt="Avatar de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>" 
-                             class="w-full h-full object-cover">
-                    <?php else: ?>
-                        <img src="/images/default.png" 
-                             alt="Avatar par défaut" 
-                             class="w-full h-full object-cover">
-                    <?php endif; ?>
+            <div class="flex items-center justify-end mb-4">
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Bonjour, <?= htmlspecialchars($_SESSION['student']->getNom()) ?>
+                    </span>
+                    <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-indigo-500 shadow-md">
+                        <?php if (!empty($_SESSION['student']->getPhotoProfile())): ?>
+                            <img src="/public/images/profile/uploads/<?= htmlspecialchars($_SESSION['student']->getPhotoProfile()) ?>"
+                                alt="Photo de profil de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>"
+                                class="w-full h-full object-cover">
+                        <?php elseif (!empty($_SESSION['student']->getAvatar())): ?>
+                            <img src="/public/images/profile/avatars/<?= htmlspecialchars($_SESSION['student']->getAvatar()) ?>"
+                                alt="Avatar de <?= htmlspecialchars($_SESSION['student']->getNom()) ?>"
+                                class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <img src="/public/public/images/default.png"
+                                alt="Avatar par défaut"
+                                class="w-full h-full object-cover">
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
-        </div>
         <?php endif; ?>
-        
+
         <!-- En-tête de la page -->
         <div class="text-center max-w-3xl mx-auto mb-12">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white md:text-4xl lg:text-5xl mb-4">
@@ -81,7 +81,7 @@ if (!empty($_SESSION['user_id'])) {
                     <div class="relative">
                         <div class="absolute -top-4 -left-4 w-72 h-72 bg-blue-100 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
                         <div class="absolute -bottom-8 right-4 w-72 h-72 bg-purple-100 dark:bg-purple-900/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-2xl opacity-70 animate-blob animation-delay-4000"></div>
-                        <img class="rounded-xl shadow-xl relative z-10" src="/images/68188270086b1.png" alt="L'équipe de TrucsPasChers">
+                        <img class="rounded-xl shadow-xl relative z-10" src="/public/images/68188270086b1.png" alt="L'équipe de TrucsPasChers">
                     </div>
                 </div>
             </div>
@@ -92,10 +92,10 @@ if (!empty($_SESSION['user_id'])) {
             <div class="flex flex-col lg:flex-row items-center gap-12">
                 <div class="lg:w-1/2 mb-8 lg:mb-0">
                     <div class="grid grid-cols-2 gap-4">
-                        <img class="rounded-xl shadow-lg transform -rotate-2" src="/images/681b7bbb52f6f.png" alt="Nos produits">
-                        <img class="mt-8 rounded-xl shadow-lg transform rotate-2" src="/images/681b7c0ea564e.png" alt="Notre communauté">
-                        <img class="rounded-xl shadow-lg transform rotate-3" src="/images/681c78d1abcca.png" alt="Notre service">
-                        <img class="mt-8 rounded-xl shadow-lg transform -rotate-3" src="/images/681c637b5c028.png" alt="Nos valeurs">
+                        <img class="rounded-xl shadow-lg transform -rotate-2" src="/public/images/681b7bbb52f6f.png" alt="Nos produits">
+                        <img class="mt-8 rounded-xl shadow-lg transform rotate-2" src="/public/images/681b7c0ea564e.png" alt="Notre communauté">
+                        <img class="rounded-xl shadow-lg transform rotate-3" src="/public/images/681c78d1abcca.png" alt="Notre service">
+                        <img class="mt-8 rounded-xl shadow-lg transform -rotate-3" src="/public/images/681c637b5c028.png" alt="Nos valeurs">
                     </div>
                 </div>
                 <div class="lg:w-1/2">
@@ -162,10 +162,10 @@ if (!empty($_SESSION['user_id'])) {
                     Des personnes talentueuses et dévouées qui travaillent chaque jour pour améliorer votre expérience sur TrucsPasChers.
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/images/681c88ec0c732.png" alt="Sarah Dupont">
+                    <img class="w-full h-56 object-cover object-center" src="/public/images/681c88ec0c732.png" alt="Sarah Dupont">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sarah Dupont</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Co-fondatrice & CEO</p>
@@ -191,7 +191,7 @@ if (!empty($_SESSION['user_id'])) {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/images/681c637b5c028.png" alt="Thomas Martin">
+                    <img class="w-full h-56 object-cover object-center" src="/public/images/681c637b5c028.png" alt="Thomas Martin">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thomas Martin</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Co-fondateur & CTO</p>
@@ -217,7 +217,7 @@ if (!empty($_SESSION['user_id'])) {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/images/681879d740a7c.png" alt="Léa Bernard">
+                    <img class="w-full h-56 object-cover object-center" src="/public/images/681879d740a7c.png" alt="Léa Bernard">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Léa Bernard</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Directrice Marketing</p>
@@ -243,7 +243,7 @@ if (!empty($_SESSION['user_id'])) {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                    <img class="w-full h-56 object-cover object-center" src="/images/68187a2cbc989.png" alt="Antoine Dubois">
+                    <img class="w-full h-56 object-cover object-center" src="/public/images/68187a2cbc989.png" alt="Antoine Dubois">
                     <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Antoine Dubois</h3>
                         <p class="text-blue-600 dark:text-blue-400 mb-3">Responsable des Opérations</p>
@@ -278,7 +278,7 @@ if (!empty($_SESSION['user_id'])) {
                     Découvrez les expériences vécues par les membres de notre communauté.
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg relative">
                     <div class="absolute top-0 right-0 -mt-3 -mr-3 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
@@ -288,14 +288,14 @@ if (!empty($_SESSION['user_id'])) {
                         "En tant qu'étudiant avec un budget limité, TrucsPasChers m'a vraiment sauvé. J'ai pu acheter un ordinateur portable de qualité à un prix abordable qui m'accompagne dans mes études."
                     </p>
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full object-cover" src="/images/téléchargement.png" alt="Julien L.">
+                        <img class="h-10 w-10 rounded-full object-cover" src="/public/images/téléchargement.png" alt="Julien L.">
                         <div class="ml-3">
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Julien L.</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Étudiant en droit</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg relative">
                     <div class="absolute top-0 right-0 -mt-3 -mr-3 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
                         <span class="text-white text-xl">★</span>
@@ -304,14 +304,14 @@ if (!empty($_SESSION['user_id'])) {
                         "La plateforme est intuitive et je me suis fait un peu d'argent en vendant des livres dont je n'avais plus besoin. Un excellent moyen de donner une seconde vie à nos objets !"
                     </p>
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full object-cover" src="/images/apple-watch.jpg" alt="Sophie D.">
+                        <img class="h-10 w-10 rounded-full object-cover" src="/public/images/apple-watch.jpg" alt="Sophie D.">
                         <div class="ml-3">
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Sophie D.</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Étudiante en informatique</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg relative">
                     <div class="absolute top-0 right-0 -mt-3 -mr-3 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
                         <span class="text-white text-xl">★</span>
@@ -320,7 +320,7 @@ if (!empty($_SESSION['user_id'])) {
                         "Le service client est réactif et efficace. J'ai eu un petit souci avec ma commande et ils l'ont résolu en moins de 24h. Je recommande vivement TrucsPasChers !"
                     </p>
                     <div class="flex items-center">
-                        <img class="h-10 w-10 rounded-full object-cover" src="/images/téléchargement (1).jpeg" alt="Marc B.">
+                        <img class="h-10 w-10 rounded-full object-cover" src="/public/images/téléchargement (1).jpeg" alt="Marc B.">
                         <div class="ml-3">
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Marc B.</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Étudiant en médecine</p>
@@ -363,10 +363,23 @@ if (!empty($_SESSION['user_id'])) {
 <!-- Style pour l'animation des blobs -->
 <style>
     @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        25% { transform: translate(20px, -20px) scale(1.1); }
-        50% { transform: translate(0, 20px) scale(0.9); }
-        75% { transform: translate(-20px, -10px) scale(1.05); }
+
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        25% {
+            transform: translate(20px, -20px) scale(1.1);
+        }
+
+        50% {
+            transform: translate(0, 20px) scale(0.9);
+        }
+
+        75% {
+            transform: translate(-20px, -10px) scale(1.05);
+        }
     }
 
     .animate-blob {

@@ -27,9 +27,7 @@ class Panier {
         
         // Vérifier si le produit existe
         try {
-            $pdo = new \PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-            ]);
+            $pdo = Connection::getInstance();
             
             $stmt = $pdo->prepare('SELECT * FROM produit WHERE id = :id');
             $stmt->execute(['id' => $produit_id]);

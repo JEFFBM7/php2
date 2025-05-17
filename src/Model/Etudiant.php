@@ -1,7 +1,8 @@
 <?php
 namespace App\Model;
 
-class  Etudiant {
+#[\AllowDynamicProperties]
+class Etudiant {
     private $id;
     private $nom;
     private $promotion;
@@ -10,6 +11,7 @@ class  Etudiant {
     private $last_login;
     private $avatar;
     private $photo_profile;
+    private $emailetudiant; // Propriété pour stocker l'email (colonne emailetudiant)
 
     public function getId() {
         return $this->id;
@@ -40,7 +42,6 @@ class  Etudiant {
     }
     
     public function getEmail() {
-        // La colonne dans la base de données s'appelle emailetudiant
         return $this->emailetudiant ?? '';
     }
 }

@@ -1,11 +1,10 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
+use App\Model\Connection;
 
 header('Content-Type: application/json');
 
-$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = Connection::getInstance();
 
 $searchTerm = $_GET['search'] ?? '';
 

@@ -2,6 +2,7 @@
 $title = 'Contact - TrucsPasChers';
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Model\Etudiant;
+use App\Model\Connection;
 
 // Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
 if (session_status() === PHP_SESSION_NONE) {
@@ -11,9 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Récupérer les informations de l'étudiant connecté si disponible
 $etudiant = null;
 if (!empty($_SESSION['user_id'])) {
-    $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    $pdo = Connection::getInstance();
     $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE id = :id');
     $stmt->execute([':id' => $_SESSION['user_id']]);
     $etudiant = $stmt->fetchObject(Etudiant::class);

@@ -1,25 +1,15 @@
 <?php
-// Servir les fichiers statiques depuis le dossier public
+/**
+ * Fichier d'entrée principal qui redirige vers public/index.php
+ * Ce fichier permet de garder public/ comme racine web tout en permettant
+ * d'accéder au site directement par la racine du projet.
+ */
 
-// Obtenir l'URI
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-$publicFile = __DIR__ . '/public' . $uri;
+// Charger l'autoloader de Composer
+require_once __DIR__ . '/vendor/autoload.php';
 
-// Servir directement tous les fichiers existants dans /public
-if ($uri !== '/' && file_exists($publicFile) && is_file($publicFile)) {
-    $ext = strtolower(pathinfo($publicFile, PATHINFO_EXTENSION));
-    if ($ext === 'php') {
-        // Exécuter les scripts PHP dans /public
-        require $publicFile;
-        exit;
-    }
-    // Fichiers statiques (images, CSS, JS, etc.)
-    $mime = mime_content_type($publicFile) ?: 'application/octet-stream';
-    header('Content-Type: ' . $mime);
-    readfile($publicFile);
-    exit;
-}
+// Charger la configuration centralisée
+require_once __DIR__ . '/config.php';
 
-// Charger le front controller de public
-require __DIR__ . '/public/index.php';
-exit;
+// Rediriger toutes les requêtes vers le point d'entrée public/index.php
+require_once __DIR__ . '/public/index.php';

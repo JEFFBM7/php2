@@ -3,6 +3,7 @@ $title = 'Connexion - TrucsPasChers';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Model\Etudiant;
+use App\Model\Connection;
 
 // Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
 if (session_status() === PHP_SESSION_NONE) {
@@ -30,9 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     // Se connecter à la base de données
-    $pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    ]);
+    $pdo = Connection::getInstance();
 
     // Rechercher l'utilisateur par nom d'utilisateur
     $stmt = $pdo->prepare('SELECT * FROM etudiant WHERE nom = :nom');
@@ -44,17 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Créer une session pour l'utilisateur
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_name'] = $user->getNom();
-        
+
         // Vérifier si c'est le premier login pour déclencher le tutoriel
         $_SESSION['first_login'] = !$user->getLastLogin();
-        
+
         // Mettre à jour la date de dernière connexion
         $updateStmt = $pdo->prepare('UPDATE etudiant SET last_login = NOW() WHERE id = :id');
         $updateStmt->execute([':id' => $user->getId()]);
-        
+
         // Débogage de la redirection
         error_log("Connexion réussie pour l'utilisateur: " . $_SESSION['user_name'] . " (ID: " . $_SESSION['user_id'] . ")");
-        
+
         // Redirection vers la page d'accueil pour le premier login (pour le tutoriel)
         if ($_SESSION['first_login']) {
             header('Location: /?show_tutorial=1');
@@ -62,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirection simplifiée vers la page profil pour les utilisateurs existants
             header('Location: /profil');
         }
-      
+
         exit;
     } else {
         // Message d'erreur si les identifiants sont incorrects
@@ -85,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-md mx-auto lg:mx-0">
                     Connectez-vous pour accéder à votre compte et découvrir nos produits à prix imbattables.
                 </p>
-                
+
                 <!-- Avantages en liste -->
                 <div class="space-y-4 mb-8 max-w-md mx-auto lg:mx-0">
                     <div class="flex items-center text-left">
@@ -137,14 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- Élément décoratif -->
                         <div class="absolute top-0 right-0 -mt-20 -mr-20 h-40 w-40 rounded-full bg-gradient-to-r from-blue-500/30 via-indigo-600/30 to-purple-700/30 blur-xl"></div>
                         <div class="absolute bottom-0 left-0 -mb-20 -ml-20 h-40 w-40 rounded-full bg-gradient-to-r from-blue-500/30 via-indigo-600/30 to-purple-700/30 blur-xl"></div>
-                        
+
                         <!-- Contenu du formulaire -->
                         <div class="p-8 relative z-10">
                             <div class="text-center mb-6">
                                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Connexion</h2>
                                 <p class="text-gray-600 dark:text-gray-400">Accédez à votre espace personnel</p>
                             </div>
-                            
+
                             <form autocomplete="off" class="space-y-6" action="" method="post">
                                 <?php if (isset($error)) : ?>
                                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-red-900/30 dark:text-red-200 flex items-center" role="alert">
@@ -154,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <?= htmlspecialchars($error) ?>
                                     </div>
                                 <?php endif; ?>
-                                
+
                                 <div>
                                     <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nom d'utilisateur</label>
                                     <div class="relative">
@@ -163,12 +162,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                             </svg>
                                         </div>
-                                        <input type="text" name="username" id="username" 
-                                            class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                                        <input type="text" name="username" id="username"
+                                            class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                                             placeholder="Votre nom d'utilisateur" required>
                                     </div>
                                 </div>
-                                
+
                                 <div>
                                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Mot de passe</label>
                                     <div class="relative">
@@ -177,15 +176,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                             </svg>
                                         </div>
-                                        <input type="password" name="password" id="password" 
-                                            class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                                        <input type="password" name="password" id="password"
+                                            class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                                             placeholder="••••••••" required>
                                     </div>
                                 </div>
-                                
+
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
-                                        <input id="remember" name="remember" type="checkbox" 
+                                        <input id="remember" name="remember" type="checkbox"
                                             class="w-4 h-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:focus:ring-blue-600 dark:bg-gray-700">
                                         <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                             Se souvenir de moi
@@ -195,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         Mot de passe oublié?
                                     </a>
                                 </div>
-                                
+
                                 <div>
                                     <button type="submit" class="w-full flex justify-center items-center py-3 px-4 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 hover:from-blue-600 hover:via-indigo-700 hover:to-purple-800 text-white font-medium rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,24 +203,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         Se connecter
                                     </button>
                                 </div>
-                                
+
                                 <div class="text-center mt-6">
                                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                                        Pas encore de compte? 
+                                        Pas encore de compte?
                                         <a href="/singup" class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                                             S'inscrire
                                         </a>
                                     </p>
                                 </div>
                             </form>
-                            
+
                             <div class="relative flex items-center justify-center mt-8">
                                 <div class="absolute border-t border-gray-300 dark:border-gray-700 w-full"></div>
                                 <div class="relative bg-white dark:bg-gray-800 px-3 text-sm text-gray-500 dark:text-gray-400">
                                     ou continuer avec
                                 </div>
                             </div>
-                            
+
                             <div class="mt-6 grid grid-cols-2 gap-4">
                                 <button type="button" class="w-full flex justify-center items-center py-2.5 px-4 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 transition-all duration-200">
                                     <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none">

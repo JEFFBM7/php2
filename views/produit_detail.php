@@ -5,6 +5,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Model\Produit;
 use App\Model\Etudiant;
+use App\Model\Connection;
 
 // Récupérer l'ID du produit depuis l'URL
 $productId = null;
@@ -28,9 +29,7 @@ if (!$productId) {
     exit;
 }
 
-$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = Connection::getInstance();
 
 // Récupérer les informations du produit
 $stmtProduit = $pdo->prepare('SELECT * FROM produit WHERE id = :id');
@@ -87,7 +86,7 @@ if ($produit->getCategori()) {
             <div class="lg:w-1/2 mb-8 lg:mb-0">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                     <?php if ($produit->getImage()): ?>
-                        <img src="/images/produits/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="block mx-auto h-100 object-cover rounded-lg ">
+                        <img src="/public/images/produits/<?= htmlspecialchars($produit->getImage()) ?>" alt="<?= htmlspecialchars($produit->getNom()) ?>" class="block mx-auto h-100 object-cover rounded-lg ">
                     <?php else: ?>
                         <div class="w-full h-[400px] bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                             <svg class="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,11 +183,11 @@ if ($produit->getCategori()) {
                             <div class="flex items-center">
                                 <div class="w-12 h-12 rounded-full overflow-hidden mr-3">
                                     <?php if ($vendeur->getPhotoProfile()): ?>
-                                        <img src="/images/profile/<?= htmlspecialchars($vendeur->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                        <img src="/public/images/profile/uploads/<?= htmlspecialchars($vendeur->getPhotoProfile()) ?>" alt="Photo de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
                                     <?php elseif ($vendeur->getAvatar()): ?>
-                                        <img src="/images/profile/avatars/<?= htmlspecialchars($vendeur->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
+                                        <img src="/public/images/profile/avatars/<?= htmlspecialchars($vendeur->getAvatar()) ?>" alt="Avatar de <?= htmlspecialchars($vendeur->getNom()) ?>" class="w-full h-full object-cover">
                                     <?php else: ?>
-                                        <img src="/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
+                                        <img src="/public/images/default.png" alt="Avatar par défaut" class="w-full h-full object-cover">
                                     <?php endif; ?>
                                 </div>
                                 <div>
@@ -259,7 +258,7 @@ if ($produit->getCategori()) {
                         <a href="/produit/<?= $pSimilaire->getId() ?>" class="block">
                             <div class="relative h-48">
                                 <?php if ($pSimilaire->getImage()): ?>
-                                    <img src="/images/produits/<?= htmlspecialchars($pSimilaire->getImage()) ?>" alt="<?= htmlspecialchars($pSimilaire->getNom()) ?>" class="w-full h-full object-cover" />
+                                    <img src="/public/images/produits/<?= htmlspecialchars($pSimilaire->getImage()) ?>" alt="<?= htmlspecialchars($pSimilaire->getNom()) ?>" class="w-full h-full object-cover" />
                                 <?php else: ?>
                                     <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                         <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

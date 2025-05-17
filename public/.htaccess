@@ -1,0 +1,40 @@
+# Configuration Apache pour le dossier public
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Protection contre les attaques XSS et clickjacking
+    <IfModule mod_headers.c>
+        Header set X-XSS-Protection "1; mode=block"
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-Frame-Options "SAMEORIGIN"
+    </IfModule>
+    
+    # Permettre l'accès direct aux fichiers existants
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    
+    # Si le fichier ou le répertoire n'existe pas, rediriger vers index.php
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+# Désactiver l'affichage du contenu des répertoires
+Options -Indexes
+
+# Protection des fichiers sensibles
+<FilesMatch "^(\.htaccess|\.htpasswd|\.env)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Définir des types MIME corrects pour améliorer la sécurité
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType image/svg+xml .svg
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+</IfModule>

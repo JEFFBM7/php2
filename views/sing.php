@@ -1,9 +1,10 @@
 <?php
 $title = 'Sing In';
 require_once __DIR__ . '/../vendor/autoload.php';
-$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
+
+use App\Model\Connection;
+
+$pdo = Connection::getInstance();
 
 // Liste des avatars disponibles
 $avatarsDir = __DIR__ . '/../public/images/profile/avatars/';
@@ -19,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $promotion = $_POST['promotion'];
     $telephone = $_POST['telephone'];
     $avatar = isset($_POST['avatar']) ? $_POST['avatar'] : 'default.svg';
-    
+
     // get next id
     $stmtMax = $pdo->query('SELECT MAX(id) AS max_id FROM etudiant');
     $maxId = $stmtMax->fetch(PDO::FETCH_ASSOC)['max_id'] ?? 0;
@@ -89,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
                                    dark:focus:border-blue-500" />
                     </div>
-                    
+
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Choisissez un avatar
@@ -98,28 +99,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="grid grid-cols-3 gap-4 flex-1">
                                 <?php foreach ($avatars as $avatar): ?>
                                     <div class="avatar-option">
-                                        <input type="radio" name="avatar" id="avatar-<?php echo $avatar; ?>" 
-                                               value="<?php echo $avatar; ?>" <?php echo $avatar === 'default.svg' ? 'checked' : ''; ?> 
-                                               class="hidden peer" />
-                                        <label for="avatar-<?php echo $avatar; ?>" 
-                                               class="flex flex-col items-center justify-center p-2 rounded-lg border-2 
+                                        <input type="radio" name="avatar" id="avatar-<?php echo $avatar; ?>"
+                                            value="<?php echo $avatar; ?>" <?php echo $avatar === 'default.svg' ? 'checked' : ''; ?>
+                                            class="hidden peer" />
+                                        <label for="avatar-<?php echo $avatar; ?>"
+                                            class="flex flex-col items-center justify-center p-2 rounded-lg border-2 
                                                       cursor-pointer border-gray-200 dark:border-gray-700 
                                                       peer-checked:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                            <img src="/public/images/profile/avatars/<?php echo $avatar; ?>" 
-                                                 alt="Avatar" class="w-16 h-16 mb-1" />
+                                            <img src="/public/images/profile/avatars/<?php echo $avatar; ?>"
+                                                alt="Avatar" class="w-16 h-16 mb-1" />
                                         </label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            
+
                             <div class="flex flex-col items-center bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white mb-2">Avatar sélectionné</p>
-                                <div class="w-24 h-24 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full p-1">                                            <img id="avatar-preview" src="/public/images/profile/avatars/default.svg" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
+                                <div class="w-24 h-24 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full p-1"> <img id="avatar-preview" src="/public/images/profile/avatars/default.svg" alt="Avatar prévisualisé" class="w-full h-full rounded-full object-cover" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <button type="submit"
                         class="w-full bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg shadow-lg
                                hover:from-blue-600 hover:via-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-4 

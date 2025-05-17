@@ -3,6 +3,8 @@ $title = 'Ajouter un produit - TrucsPasChers';
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Model\Connection;
+
 // Vérifier si l'utilisateur est connecté
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -13,9 +15,7 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
+$pdo = Connection::getInstance();
 
 $message = null;
 $messageType = null;
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $messageType = "success";
             
             // Redirection après un court délai pour afficher le message
-            header("refresh:1;url=/produit");
+            header("location: /profil");
         } catch (PDOException $e) {
             $message = "Une erreur est survenue lors de l'ajout du produit : " . $e->getMessage();
             $messageType = "error";

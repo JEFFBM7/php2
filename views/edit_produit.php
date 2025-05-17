@@ -3,6 +3,7 @@ $title = "Modifier le produit - TrucsPasChers";
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Model\Produit;
+use App\Model\Connection;
 
 // Démarrer ou récupérer la session uniquement si ce n'est pas déjà fait
 if (session_status() === PHP_SESSION_NONE) {
@@ -14,9 +15,7 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-$pdo = new PDO('mysql:host=localhost;dbname=tp', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
+$pdo = Connection::getInstance();
 
 $product_id = $_GET['id'] ?? null;
 $etudiant_id = $_SESSION['user_id'];

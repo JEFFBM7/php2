@@ -18,6 +18,7 @@ class Produit {
     private $prix;
     private $devis;
     private $categori; // Ajout de la propriété categori
+    private $stars; // Propriété pour les évaluations (étoiles)
 
     /**
    
@@ -53,8 +54,24 @@ class Produit {
     public function getCategori() { // Ajout du getter pour categori
         return $this->categori;
     }
-   
-     
-
+    
+    /**
+     * Obtient la valeur des étoiles (note) du produit
+     * 
+     * @return float|null Valeur des étoiles ou null si non défini
+     */
+    public function getStars() {
+        return $this->stars ?? null;
+    }
+    
+    /**
+     * Définit la valeur des étoiles (note) du produit
+     * 
+     * @param float $stars Valeur des étoiles
+     * @return void
+     */
+    public function setStars($stars) {
+        $this->stars = $stars;
+    }
 }
 
